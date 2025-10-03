@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **File Dialog Integration**: Native Windows file and folder selection dialogs
 - **Error Handling**: Comprehensive error messages and troubleshooting guidance
 - **Executable Management**: Automatic detection and validation of required tools
+- **Card-based Drag & Drop**: Enhanced drag and drop functionality for individual operation cards
+- **Visual Drag Feedback**: Real-time visual feedback when dragging files over cards
+- **File Type Validation**: Automatic validation for .intunewin files on extract operations
 
 ### Technical Implementation
 - **Rust Backend**: Tauri commands for IntuneWin operations (`create_intunewin`, `extract_intunewin`)

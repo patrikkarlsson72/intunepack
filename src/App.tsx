@@ -25,6 +25,7 @@ function App() {
   const [logs, setLogs] = useState<string[]>([]);
   const [currentOperation, setCurrentOperation] = useState<'create' | 'extract' | null>(null);
   const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
+  const [dragOverCard, setDragOverCard] = useState<'create' | 'extract' | null>(null);
 
   // Set up event listeners for progress updates
   useEffect(() => {
@@ -57,6 +58,7 @@ function App() {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
+    setDragOverCard(null);
     
     const files = Array.from(e.dataTransfer.files);
     if (files.length > 0) {
@@ -69,6 +71,40 @@ function App() {
         setCurrentOperation('extract');
       } else {
         setCurrentOperation('create');
+      }
+    }
+  };
+
+  const handleCardDragOver = (e: React.DragEvent, cardType: 'create' | 'extract') => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOverCard(cardType);
+  };
+
+  const handleCardDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOverCard(null);
+  };
+
+  const handleCardDrop = (e: React.DragEvent, cardType: 'create' | 'extract') => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOverCard(null);
+    
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+      console.log(`Files dropped on ${cardType} card:`, files);
+      setDroppedFiles(files);
+      setCurrentOperation(cardType);
+      
+      // If dropping on extract card, validate that we have IntuneWin files
+      if (cardType === 'extract') {
+        const hasIntuneWin = files.some(file => file.name.toLowerCase().endsWith('.intunewin'));
+        if (!hasIntuneWin) {
+          setLogs(prev => [...prev, 'Warning: Only .intunewin files can be extracted. Please drop a valid IntuneWin file.']);
+          return;
+        }
       }
     }
   };
@@ -298,10 +334,17 @@ function App() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Create Package Card */}
           <Card 
-            className={`hover:shadow-lg transition-shadow cursor-pointer border-primary/20 hover:border-primary/40 ${
+            className={`hover:shadow-lg transition-all duration-200 cursor-pointer border-primary/20 hover:border-primary/40 ${
               currentOperation === 'create' ? 'ring-2 ring-primary/50' : ''
+            } ${
+              dragOverCard === 'create' 
+                ? 'border-primary bg-primary/10 shadow-lg scale-[1.02] ring-2 ring-primary/50' 
+                : ''
             }`}
             onClick={() => setCurrentOperation('create')}
+            onDragOver={(e) => handleCardDragOver(e, 'create')}
+            onDragLeave={handleCardDragLeave}
+            onDrop={(e) => handleCardDrop(e, 'create')}
           >
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3">
@@ -313,6 +356,11 @@ function App() {
               <p className="text-sm text-muted-foreground mb-4">
                 Package installers, folders, or files into a .intunewin file for Intune deployment.
               </p>
+              {dragOverCard === 'create' && (
+                <div className="text-center py-2 text-primary font-medium">
+                  Drop files here to create package
+                </div>
+              )}
               {status === 'processing' && currentOperation === 'create' && (
                 <div className="space-y-2">
                   <Progress value={progress} className="h-2" />
@@ -324,10 +372,17 @@ function App() {
 
           {/* Extract Package Card */}
           <Card 
-            className={`hover:shadow-lg transition-shadow cursor-pointer border-green-500/20 hover:border-green-500/40 ${
+            className={`hover:shadow-lg transition-all duration-200 cursor-pointer border-green-500/20 hover:border-green-500/40 ${
               currentOperation === 'extract' ? 'ring-2 ring-green-500/50' : ''
+            } ${
+              dragOverCard === 'extract' 
+                ? 'border-green-500 bg-green-500/10 shadow-lg scale-[1.02] ring-2 ring-green-500/50' 
+                : ''
             }`}
             onClick={() => setCurrentOperation('extract')}
+            onDragOver={(e) => handleCardDragOver(e, 'extract')}
+            onDragLeave={handleCardDragLeave}
+            onDrop={(e) => handleCardDrop(e, 'extract')}
           >
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3">
@@ -339,6 +394,11 @@ function App() {
               <p className="text-sm text-muted-foreground mb-4">
                 Extract contents from an existing .intunewin file to view its structure.
               </p>
+              {dragOverCard === 'extract' && (
+                <div className="text-center py-2 text-green-500 font-medium">
+                  Drop .intunewin file here to extract
+                </div>
+              )}
               {status === 'processing' && currentOperation === 'extract' && (
                 <div className="space-y-2">
                   <Progress value={progress} className="h-2" />
