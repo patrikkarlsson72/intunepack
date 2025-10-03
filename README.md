@@ -1,6 +1,8 @@
-# Tauri + React + Typescript
+# IntunePack
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+A lightweight Windows desktop application that enables IT admins to easily create and extract `.intunewin` files. With simple drag-and-drop functionality, the app eliminates the need for complex command-line usage, making packaging tasks faster and more accessible.
+
+Built with Tauri, React, and TypeScript.
 
 ## Recommended IDE Setup
 

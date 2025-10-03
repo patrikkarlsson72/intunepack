@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "intunewin-helper",
+  "productName": "IntunePack",
   "version": "0.1.0",
-  "identifier": "com.patrikkarlsson.intunewin-helper",
+  "identifier": "com.patrikkarlsson.intunepack",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "intunewin-helper",
+        "title": "IntunePack",
         "width": 800,
         "height": 600
       }
