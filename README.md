@@ -4,32 +4,39 @@ A lightweight Windows desktop application that enables IT administrators to easi
 
 ## 🚀 Features
 
+- **IntuneWinAppUtilDecoder Integration**: Complete integration with Microsoft Intune Win32 Content Prep Tool
+- **Package Creation**: Create .intunewin files from installers, folders, or files
+- **Package Extraction**: Extract contents from existing .intunewin files
 - **Drag & Drop Interface**: Simple file operations with visual feedback
-- **Windows-Friendly Theme**: Optimized dark theme for IT administrators
 - **Real-time Progress**: Live status updates and operation monitoring
+- **File Dialogs**: Native Windows file and folder selection
+- **Windows-Friendly Theme**: Optimized dark theme for IT administrators
 - **Professional UI**: Clean, enterprise-ready interface design
 - **Accessibility**: Full keyboard navigation and screen reader support
 - **Modern Tech Stack**: Built with Tauri, React, and TypeScript
 
 ## 📋 Current Status
 
-**Version**: 0.1.0 (Initial Release)  
-**Status**: UI Complete, Core Functionality In Development  
+**Version**: 0.1.0+ (With IntuneWinAppUtilDecoder Integration)  
+**Status**: Core Functionality Complete, Ready for Testing  
 **Platform**: Windows 10/11 (64-bit)
 
 ### ✅ Completed
 - Complete user interface and theme system
-- Drag and drop framework
+- IntuneWinAppUtilDecoder integration for package creation and extraction
+- Real-time progress tracking and logging
+- File dialog integration for Windows-native experience
+- Drag and drop framework with operation detection
 - Windows-friendly dark theme
 - Responsive design and accessibility features
-- Comprehensive documentation
+- Comprehensive error handling and user feedback
 - Project structure and build system
 
 ### 🚧 In Development
-- Actual .intunewin creation and extraction functionality
-- File validation and error handling
-- User preferences and settings
+- User preferences and settings persistence
 - Batch processing capabilities
+- Advanced package validation
+- Auto-download of IntuneWin executables
 
 ## 🛠️ Technology Stack
 
@@ -46,6 +53,7 @@ A lightweight Windows desktop application that enables IT administrators to easi
 - Node.js 18+ and npm
 - Rust 1.70+
 - Windows 10/11 (64-bit)
+- **IntuneWin Executables**: Download `IntuneWinAppUtil.exe` and `IntuneWinAppUtilDecoder.exe` and place them in `src-tauri/bin/`
 
 ### Installation
 ```bash
@@ -65,6 +73,28 @@ npm run tauri dev
 # Build for production
 npm run tauri build
 ```
+
+## 📦 IntuneWin Executables Setup
+
+To use IntunePack, you need to download the Microsoft Intune Win32 Content Prep Tool executables:
+
+### Download Sources
+- **IntuneWinAppUtil.exe**: Available from Microsoft's official Intune Win32 Content Prep Tool
+- **IntuneWinAppUtilDecoder.exe**: Available from the [IntuneWinAppUtilDecoder GitHub repository](https://github.com/okieselbach/Intune/tree/master/IntuneWinAppUtilDecoder)
+
+### Installation
+1. Download both executables
+2. Place them in the `src-tauri/bin/` directory:
+   ```
+   intunepack/
+   └── src-tauri/
+       └── bin/
+           ├── IntuneWinAppUtil.exe
+           └── IntuneWinAppUtilDecoder.exe
+   ```
+
+### Verification
+The application will automatically detect the executables and show helpful error messages if they're missing.
 
 ## 📖 Documentation
 

@@ -7,12 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **IntuneWinAppUtilDecoder Integration**: Complete integration with Microsoft Intune Win32 Content Prep Tool
+- **Package Creation**: Full .intunewin file creation using IntuneWinAppUtil.exe
+- **Package Extraction**: Complete .intunewin file extraction using IntuneWinAppUtilDecoder.exe
+- **Real-time Progress Tracking**: Live progress updates during packaging operations
+- **File Dialog Integration**: Native Windows file and folder selection dialogs
+- **Error Handling**: Comprehensive error messages and troubleshooting guidance
+- **Executable Management**: Automatic detection and validation of required tools
+
+### Technical Implementation
+- **Rust Backend**: Tauri commands for IntuneWin operations (`create_intunewin`, `extract_intunewin`)
+- **Progress Events**: Real-time progress updates via Tauri event system
+- **File System Integration**: Proper file path handling and validation
+- **Plugin Configuration**: Shell and dialog plugin setup for system integration
+- **Error Recovery**: Graceful handling of missing executables with helpful messages
+
+### Fixed
+- **Tauri v2 Compatibility**: Updated API calls from `emit_all` to `emit` with proper trait imports
+- **Plugin Configuration**: Corrected shell and dialog plugin settings for Tauri v2
+- **Build Issues**: Resolved compilation errors and dependency conflicts
+- **Port Conflicts**: Fixed development server port management
+
 ### Planned
-- Implement actual .intunewin creation and extraction functionality
 - Add batch processing capabilities
 - Implement user preferences and settings persistence
 - Add package validation and verification features
 - Create installer and distribution packages
+- Add IntuneWinAppUtil.exe and IntuneWinAppUtilDecoder.exe auto-download
 
 ## [0.1.0] - 2025-10-03
 
@@ -93,21 +115,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **2025-10-03**: GitHub repository setup and push
 - **2025-10-03**: Documentation updates and final project organization
 
+### IntuneWinAppUtilDecoder Integration
+- **2025-10-03**: Researched IntuneWinAppUtilDecoder vs custom implementation approach
+- **2025-10-03**: Decided to integrate existing tools for reliability and speed
+- **2025-10-03**: Added Rust backend commands for IntuneWin operations
+- **2025-10-03**: Implemented real-time progress tracking with Tauri events
+- **2025-10-03**: Added file dialog integration for Windows-native experience
+- **2025-10-03**: Updated frontend to handle drag-and-drop and operation selection
+- **2025-10-03**: Fixed Tauri v2 compatibility issues (emit_all → emit, plugin configs)
+- **2025-10-03**: Resolved build errors and dependency conflicts
+- **2025-10-03**: Added comprehensive error handling for missing executables
+- **2025-10-03**: Updated documentation with integration details
+
 ## Known Issues
 
 ### Current Limitations
-- **Package Operations**: Actual .intunewin creation/extraction not yet implemented
-- **File Validation**: Limited file type validation and error handling
+- **Executable Requirements**: Requires manual download of IntuneWinAppUtil.exe and IntuneWinAppUtilDecoder.exe
 - **Settings**: No user preferences or configuration persistence
 - **Batch Processing**: Single file operations only
-- **Error Recovery**: Basic error handling without advanced recovery options
+- **Advanced Validation**: Basic file validation without deep package inspection
+- **Error Recovery**: Standard error handling without advanced recovery options
 
 ### Future Enhancements
-- **Core Functionality**: Implement actual IntuneWin packaging operations
+- **Auto-Download**: Automatic download of IntuneWin executables during first run
 - **Advanced Features**: Batch processing, templates, and automation
 - **Integration**: Direct Microsoft Intune upload capabilities
 - **Performance**: Multi-threading and large file handling optimizations
 - **User Experience**: Advanced settings, preferences, and customization options
+- **Package Validation**: Deep inspection of .intunewin files and contents
+- **Template System**: Save and reuse packaging configurations
 
 ## Contributing
 
