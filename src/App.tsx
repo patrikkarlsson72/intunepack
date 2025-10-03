@@ -1,12 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Upload, Package, ChevronUp, ChevronDown, Sun, Moon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { useTheme } from "./contexts/ThemeContext";
+import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
+import { open as openDialog } from "@tauri-apps/plugin-dialog";
 import "./App.css";
+
+interface ProgressUpdate {
+  progress: number;
+  message: string;
+  timestamp: string;
+}
 
 function App() {
   const { theme, toggleTheme } = useTheme();
@@ -15,6 +23,26 @@ function App() {
   const [status, setStatus] = useState<'idle' | 'processing' | 'completed' | 'failed'>('idle');
   const [progress, setProgress] = useState(0);
   const [logs, setLogs] = useState<string[]>([]);
+  const [currentOperation, setCurrentOperation] = useState<'create' | 'extract' | null>(null);
+  const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
+
+  // Set up event listeners for progress updates
+  useEffect(() => {
+    const unlisten = listen<ProgressUpdate>('progress-update', (event) => {
+      const { progress: newProgress, message, timestamp } = event.payload;
+      setProgress(newProgress);
+      setLogs(prev => [...prev, `[${new Date(timestamp).toLocaleTimeString()}] ${message}`]);
+      
+      if (newProgress === 100) {
+        setStatus('completed');
+        setCurrentOperation(null);
+      }
+    });
+
+    return () => {
+      unlisten.then(fn => fn());
+    };
+  }, []);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -33,7 +61,146 @@ function App() {
     const files = Array.from(e.dataTransfer.files);
     if (files.length > 0) {
       console.log('Files dropped:', files);
-      // TODO: Implement file processing logic
+      setDroppedFiles(files);
+      
+      // Determine operation type based on file extension
+      const hasIntuneWin = files.some(file => file.name.toLowerCase().endsWith('.intunewin'));
+      if (hasIntuneWin) {
+        setCurrentOperation('extract');
+      } else {
+        setCurrentOperation('create');
+      }
+    }
+  };
+
+  const handleCreatePackage = async () => {
+    setStatus('processing');
+    setProgress(0);
+    setLogs([]);
+    
+    try {
+      // Open file dialog to select input files/folders
+      const selectedPath = await openDialog({
+        title: 'Select files or folder to package',
+        directory: false,
+        multiple: false,
+      });
+      
+      if (!selectedPath) {
+        setStatus('idle');
+        return;
+      }
+      
+      // Open folder dialog to select output directory
+      const outputDir = await openDialog({
+        title: 'Select output directory',
+        directory: true,
+        multiple: false,
+      });
+      
+      if (!outputDir) {
+        setStatus('idle');
+        return;
+      }
+      
+      const result = await invoke('create_intunewin', {
+        inputPath: selectedPath,
+        outputDir,
+        setupFile: null
+      });
+      
+      console.log('Package created:', result);
+    } catch (error) {
+      console.error('Error creating package:', error);
+      setStatus('failed');
+      setLogs(prev => [...prev, `Error: ${error}`]);
+    }
+  };
+
+  const handleExtractPackage = async () => {
+    setStatus('processing');
+    setProgress(0);
+    setLogs([]);
+    
+    try {
+      // Open file dialog to select .intunewin file
+      const selectedFile = await openDialog({
+        title: 'Select .intunewin file to extract',
+        directory: false,
+        multiple: false,
+        filters: [{
+          name: 'IntuneWin Files',
+          extensions: ['intunewin']
+        }]
+      });
+      
+      if (!selectedFile) {
+        setStatus('idle');
+        return;
+      }
+      
+      // Open folder dialog to select output directory
+      const outputDir = await openDialog({
+        title: 'Select output directory',
+        directory: true,
+        multiple: false,
+      });
+      
+      if (!outputDir) {
+        setStatus('idle');
+        return;
+      }
+      
+      const result = await invoke('extract_intunewin', {
+        filePath: selectedFile,
+        outputDir
+      });
+      
+      console.log('Package extracted:', result);
+    } catch (error) {
+      console.error('Error extracting package:', error);
+      setStatus('failed');
+      setLogs(prev => [...prev, `Error: ${error}`]);
+    }
+  };
+
+  const handleBrowseFiles = async () => {
+    try {
+      const selectedFile = await openDialog({
+        title: 'Select file to process',
+        directory: false,
+        multiple: false,
+      });
+      
+      if (selectedFile) {
+        // Determine operation type based on file extension
+        if (selectedFile.toLowerCase().endsWith('.intunewin')) {
+          setCurrentOperation('extract');
+          setDroppedFiles([{ name: selectedFile.split('/').pop() || selectedFile } as File]);
+        } else {
+          setCurrentOperation('create');
+          setDroppedFiles([{ name: selectedFile.split('/').pop() || selectedFile } as File]);
+        }
+      }
+    } catch (error) {
+      console.error('Error opening file dialog:', error);
+    }
+  };
+
+  const handleBrowseFolders = async () => {
+    try {
+      const selectedFolder = await openDialog({
+        title: 'Select folder to process',
+        directory: true,
+        multiple: false,
+      });
+      
+      if (selectedFolder) {
+        setCurrentOperation('create');
+        setDroppedFiles([{ name: selectedFolder.split('/').pop() || selectedFolder } as File]);
+      }
+    } catch (error) {
+      console.error('Error opening folder dialog:', error);
     }
   };
 
@@ -98,15 +265,44 @@ function App() {
             Drag and drop installers, folders, or .intunewin files
           </p>
           <div className="flex gap-4 justify-center">
-            <Button variant="outline">Browse Files</Button>
-            <Button variant="outline">Browse Folders</Button>
+            <Button variant="outline" onClick={handleBrowseFiles}>Browse Files</Button>
+            <Button variant="outline" onClick={handleBrowseFolders}>Browse Folders</Button>
           </div>
+          
+          {/* Show dropped files */}
+          {droppedFiles.length > 0 && (
+            <div className="mt-4 p-4 bg-muted/30 rounded-lg">
+              <h3 className="font-medium mb-2">Files ready for processing:</h3>
+              <ul className="text-sm text-muted-foreground space-y-1">
+                {droppedFiles.map((file, index) => (
+                  <li key={index}>• {file.name}</li>
+                ))}
+              </ul>
+              <div className="mt-3 flex gap-2 justify-center">
+                {currentOperation === 'create' && (
+                  <Button onClick={handleCreatePackage} disabled={status === 'processing'}>
+                    Create Package
+                  </Button>
+                )}
+                {currentOperation === 'extract' && (
+                  <Button onClick={handleExtractPackage} disabled={status === 'processing'}>
+                    Extract Package
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Action Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Create Package Card */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer border-primary/20 hover:border-primary/40">
+          <Card 
+            className={`hover:shadow-lg transition-shadow cursor-pointer border-primary/20 hover:border-primary/40 ${
+              currentOperation === 'create' ? 'ring-2 ring-primary/50' : ''
+            }`}
+            onClick={() => setCurrentOperation('create')}
+          >
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3">
                 <Package className="h-6 w-6 text-primary" />
@@ -117,7 +313,7 @@ function App() {
               <p className="text-sm text-muted-foreground mb-4">
                 Package installers, folders, or files into a .intunewin file for Intune deployment.
               </p>
-              {status === 'processing' && (
+              {status === 'processing' && currentOperation === 'create' && (
                 <div className="space-y-2">
                   <Progress value={progress} className="h-2" />
                   <p className="text-xs text-muted-foreground">Creating package...</p>
@@ -127,7 +323,12 @@ function App() {
           </Card>
 
           {/* Extract Package Card */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer border-green-500/20 hover:border-green-500/40">
+          <Card 
+            className={`hover:shadow-lg transition-shadow cursor-pointer border-green-500/20 hover:border-green-500/40 ${
+              currentOperation === 'extract' ? 'ring-2 ring-green-500/50' : ''
+            }`}
+            onClick={() => setCurrentOperation('extract')}
+          >
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3">
                 <Upload className="h-6 w-6 text-green-500" />
@@ -138,7 +339,7 @@ function App() {
               <p className="text-sm text-muted-foreground mb-4">
                 Extract contents from an existing .intunewin file to view its structure.
               </p>
-              {status === 'processing' && (
+              {status === 'processing' && currentOperation === 'extract' && (
                 <div className="space-y-2">
                   <Progress value={progress} className="h-2" />
                   <p className="text-xs text-muted-foreground">Extracting package...</p>

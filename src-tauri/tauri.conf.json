@@ -21,6 +21,31 @@
       "csp": null
     }
   },
+  "plugins": {
+    "shell": {
+      "all": true,
+      "scope": [
+        {
+          "name": "IntuneWinAppUtilDecoder",
+          "cmd": "IntuneWinAppUtilDecoder.exe",
+          "args": []
+        },
+        {
+          "name": "IntuneWinAppUtil",
+          "cmd": "IntuneWinAppUtil.exe",
+          "args": []
+        }
+      ]
+    },
+    "dialog": {
+      "all": true,
+      "ask": true,
+      "confirm": true,
+      "message": true,
+      "open": true,
+      "save": true
+    }
+  },
   "bundle": {
     "active": true,
     "targets": "all",
@@ -30,6 +55,10 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
+    ],
+    "resources": [
+      "bin/IntuneWinAppUtilDecoder.exe",
+      "bin/IntuneWinAppUtil.exe"
     ]
   }
 }
