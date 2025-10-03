@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - **Tauri v2 Compatibility**: Updated API calls from `emit_all` to `emit` with proper trait imports
 - **Plugin Configuration**: Corrected shell and dialog plugin settings for Tauri v2
+- **Dialog Plugin Startup Error**: Fixed PluginInitialization error by removing empty dialog configuration from tauri.conf.json
 - **Build Issues**: Resolved compilation errors and dependency conflicts
 - **Port Conflicts**: Fixed development server port management
 
@@ -126,6 +127,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **2025-10-03**: Resolved build errors and dependency conflicts
 - **2025-10-03**: Added comprehensive error handling for missing executables
 - **2025-10-03**: Updated documentation with integration details
+
+### Bug Fixes and Stability Improvements
+- **2025-01-27**: Fixed critical startup crash caused by dialog plugin configuration error
+  - Removed empty `"dialog": {}` configuration from tauri.conf.json
+  - Resolved PluginInitialization deserialization error
+  - Dialog plugin now properly initialized with default settings via Rust code
+  - Application now starts successfully without configuration conflicts
 
 ## Known Issues
 
