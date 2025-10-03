@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::process::Command;
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Emitter};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct OperationResult {
@@ -35,11 +35,11 @@ async fn extract_intunewin(
         message: "Starting extraction...".to_string(),
         timestamp: chrono::Utc::now().to_rfc3339(),
     };
-    app.emit_all("progress-update", &progress_update)
+    app.emit("progress-update", &progress_update)
         .map_err(|e| e.to_string())?;
 
     // Get the path to the decoder executable
-    let decoder_path = get_decoder_path();
+    let decoder_path = get_decoder_path()?;
     
     // Validate input file exists
     if !std::path::Path::new(&file_path).exists() {
@@ -57,7 +57,7 @@ async fn extract_intunewin(
         message: "Running decoder...".to_string(),
         timestamp: chrono::Utc::now().to_rfc3339(),
     };
-    app.emit_all("progress-update", &progress_update)
+    app.emit("progress-update", &progress_update)
         .map_err(|e| e.to_string())?;
 
     // Execute the decoder
@@ -77,7 +77,7 @@ async fn extract_intunewin(
         },
         timestamp: chrono::Utc::now().to_rfc3339(),
     };
-    app.emit_all("progress-update", &progress_update)
+    app.emit("progress-update", &progress_update)
         .map_err(|e| e.to_string())?;
 
     if output.status.success() {
@@ -105,11 +105,11 @@ async fn create_intunewin(
         message: "Starting package creation...".to_string(),
         timestamp: chrono::Utc::now().to_rfc3339(),
     };
-    app.emit_all("progress-update", &progress_update)
+    app.emit("progress-update", &progress_update)
         .map_err(|e| e.to_string())?;
 
     // Get the path to the IntuneWinAppUtil executable
-    let util_path = get_util_path();
+    let util_path = get_util_path()?;
     
     // Validate input path exists
     if !std::path::Path::new(&input_path).exists() {
@@ -127,7 +127,7 @@ async fn create_intunewin(
         message: "Running IntuneWinAppUtil...".to_string(),
         timestamp: chrono::Utc::now().to_rfc3339(),
     };
-    app.emit_all("progress-update", &progress_update)
+    app.emit("progress-update", &progress_update)
         .map_err(|e| e.to_string())?;
 
     // Build the command
@@ -155,7 +155,7 @@ async fn create_intunewin(
         },
         timestamp: chrono::Utc::now().to_rfc3339(),
     };
-    app.emit_all("progress-update", &progress_update)
+    app.emit("progress-update", &progress_update)
         .map_err(|e| e.to_string())?;
 
     if output.status.success() {
@@ -170,26 +170,38 @@ async fn create_intunewin(
     }
 }
 
-fn get_decoder_path() -> PathBuf {
-    // In development, look for the decoder in the bin directory
-    // In production, it will be bundled with the app
-    if cfg!(debug_assertions) {
-        PathBuf::from("src-tauri/bin/IntuneWinAppUtilDecoder.exe")
-    } else {
-        // In production, the executable will be in the same directory as the app
-        PathBuf::from("IntuneWinAppUtilDecoder.exe")
+fn get_decoder_path() -> Result<PathBuf, String> {
+    // Try multiple possible locations for the decoder
+    let possible_paths = vec![
+        PathBuf::from("src-tauri/bin/IntuneWinAppUtilDecoder.exe"),
+        PathBuf::from("bin/IntuneWinAppUtilDecoder.exe"),
+        PathBuf::from("IntuneWinAppUtilDecoder.exe"),
+    ];
+    
+    for path in possible_paths {
+        if path.exists() {
+            return Ok(path);
+        }
     }
+    
+    Err("IntuneWinAppUtilDecoder.exe not found. Please download it from the Microsoft Intune Win32 Content Prep Tool and place it in the bin directory.".to_string())
 }
 
-fn get_util_path() -> PathBuf {
-    // In development, look for the utility in the bin directory
-    // In production, it will be bundled with the app
-    if cfg!(debug_assertions) {
-        PathBuf::from("src-tauri/bin/IntuneWinAppUtil.exe")
-    } else {
-        // In production, the executable will be in the same directory as the app
-        PathBuf::from("IntuneWinAppUtil.exe")
+fn get_util_path() -> Result<PathBuf, String> {
+    // Try multiple possible locations for the utility
+    let possible_paths = vec![
+        PathBuf::from("src-tauri/bin/IntuneWinAppUtil.exe"),
+        PathBuf::from("bin/IntuneWinAppUtil.exe"),
+        PathBuf::from("IntuneWinAppUtil.exe"),
+    ];
+    
+    for path in possible_paths {
+        if path.exists() {
+            return Ok(path);
+        }
     }
+    
+    Err("IntuneWinAppUtil.exe not found. Please download it from the Microsoft Intune Win32 Content Prep Tool and place it in the bin directory.".to_string())
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
