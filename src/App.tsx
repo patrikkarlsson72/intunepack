@@ -441,11 +441,7 @@ function App() {
                   <>
                     <div className="flex items-center gap-2">
                       <span className={`w-2 h-2 rounded-full ${selectedFilePath ? 'bg-green-500' : 'bg-gray-400'}`}></span>
-                      <span>Setup Folder: {selectedFilePath ? selectedFilePath.split('/').pop() || selectedFilePath.split('\\').pop() : 'Not selected'}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className={`w-2 h-2 rounded-full ${selectedSetupFile ? 'bg-green-500' : 'bg-gray-400'}`}></span>
-                      <span>Setup File: {selectedSetupFile || 'Not selected'}</span>
+                      <span>Setup File: {selectedFilePath ? selectedFilePath.split('/').pop() || selectedFilePath.split('\\').pop() : 'Not selected'}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className={`w-2 h-2 rounded-full ${outputFolder ? 'bg-green-500' : 'bg-gray-400'}`}></span>
