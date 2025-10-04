@@ -271,6 +271,9 @@ function App() {
         return;
       }
       
+      // Store the selected output directory for display in workflow box
+      setOutputFolder(outputDir);
+      
       const result = await invoke('extract_intunewin', {
         filePath: selectedFile,
         outputDir
@@ -419,24 +422,41 @@ function App() {
           {/* Show selected files and workflow status */}
           {(droppedFiles.length > 0 || selectedFilePath || selectedSetupFile || outputFolder) && (
             <div className="mt-4 p-4 bg-muted/30 rounded-lg">
-              <h3 className="font-medium mb-2">Package Creation Workflow:</h3>
+              <h3 className="font-medium mb-2">
+                {currentOperation === 'extract' ? 'Package Extraction Workflow:' : 'Package Creation Workflow:'}
+              </h3>
               <div className="space-y-2 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <span className={`w-2 h-2 rounded-full ${selectedFilePath ? 'bg-green-500' : 'bg-gray-400'}`}></span>
-                  <span>Setup Folder: {selectedFilePath ? selectedFilePath.split('/').pop() || selectedFilePath.split('\\').pop() : 'Not selected'}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className={`w-2 h-2 rounded-full ${selectedSetupFile ? 'bg-green-500' : 'bg-gray-400'}`}></span>
-                  <span>Setup File: {selectedSetupFile || 'Not selected'}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className={`w-2 h-2 rounded-full ${outputFolder ? 'bg-green-500' : 'bg-gray-400'}`}></span>
-                  <span>Output Folder: {outputFolder ? outputFolder.split('/').pop() || outputFolder.split('\\').pop() : 'Not selected'}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className={`w-2 h-2 rounded-full ${outputFilename ? 'bg-green-500' : 'bg-gray-400'}`}></span>
-                  <span>Output File: {outputFilename || 'Auto-generated'}</span>
-                </div>
+                {currentOperation === 'extract' ? (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <span className={`w-2 h-2 rounded-full ${selectedFilePath ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                      <span>Source File: {selectedFilePath ? selectedFilePath.split('/').pop() || selectedFilePath.split('\\').pop() : 'Not selected'}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`w-2 h-2 rounded-full ${outputFolder ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                      <span>Extract To: {outputFolder ? outputFolder.split('/').pop() || outputFolder.split('\\').pop() : 'Not selected'}</span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <span className={`w-2 h-2 rounded-full ${selectedFilePath ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                      <span>Setup Folder: {selectedFilePath ? selectedFilePath.split('/').pop() || selectedFilePath.split('\\').pop() : 'Not selected'}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`w-2 h-2 rounded-full ${selectedSetupFile ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                      <span>Setup File: {selectedSetupFile || 'Not selected'}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`w-2 h-2 rounded-full ${outputFolder ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                      <span>Output Folder: {outputFolder ? outputFolder.split('/').pop() || outputFolder.split('\\').pop() : 'Not selected'}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`w-2 h-2 rounded-full ${outputFilename ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                      <span>Output File: {outputFilename || 'Auto-generated'}</span>
+                    </div>
+                  </>
+                )}
               </div>
               <div className="mt-3 flex gap-2 justify-center">
                 {currentOperation === 'create' && (
