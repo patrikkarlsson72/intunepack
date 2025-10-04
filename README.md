@@ -5,7 +5,9 @@ A lightweight Windows desktop application that enables IT administrators to easi
 ## 🚀 Features
 
 - **IntuneWinAppUtilDecoder Integration**: Complete integration with Microsoft Intune Win32 Content Prep Tool
-- **Package Creation**: Create .intunewin files from installers, folders, or files
+- **4-Step Package Creation Workflow**: Browse Folders → Select Setup File → Choose Output → Create Package
+- **Visual Progress Tracking**: Real-time workflow status with green dot indicators for each completed step
+- **Package Creation**: Create .intunewin files from installers, folders, or files using correct IntuneWinAppUtil.exe parameters
 - **Package Extraction**: Extract contents from existing .intunewin files
 - **Click-to-Select Interface**: Simple file operations with visual feedback
 - **Real-time Progress**: Live status updates and operation monitoring
@@ -25,6 +27,9 @@ A lightweight Windows desktop application that enables IT administrators to easi
 ### ✅ Completed
 - Complete user interface and theme system
 - IntuneWinAppUtilDecoder integration for package creation and extraction
+- 4-step package creation workflow with visual progress tracking
+- Correct IntuneWinAppUtil.exe command-line parameter implementation
+- Enhanced file detection and success verification
 - Real-time progress tracking and logging
 - File dialog integration for Windows-native experience
 - Click-to-select framework with operation detection
@@ -103,6 +108,17 @@ The application will automatically detect the executables and show helpful error
 - **[Software Requirements Specification](doc/srs.md)**: Technical implementation details
 - **[User Interface Design Document](doc/uidd.md)**: UI/UX specifications and design system
 - **[Changelog](CHANGELOG.md)**: Complete project history and changes
+
+## 📋 Package Creation Workflow
+
+IntunePack provides a streamlined 4-step process for creating .intunewin packages:
+
+1. **Browse Folders**: Select the folder containing your application setup files
+2. **Select Setup File**: Choose the main setup executable (e.g., setup.exe, setup.msi)
+3. **Choose Output**: Select the destination folder for the generated .intunewin file
+4. **Create Package**: Click "Create Package" to generate the .intunewin file
+
+The application provides visual feedback with green dot indicators showing your progress through each step, ensuring a clear and intuitive user experience.
 
 ## 🎯 Target Users
 

@@ -13,6 +13,7 @@ IntunePack's user interface is designed specifically for Windows IT administrato
 
 ### Central Workspace
 - **Click-to-Select Zone**: Large, prominent area for file operations
+- **Workflow Tracker**: Visual progress indicators showing completed steps in package creation
 - **Visual Feedback**: Dynamic hover states with scaling and color changes
 - **Instructions**: Clear text guidance for supported file types
 - **Action Buttons**: Browse Files and Browse Folders for manual selection
@@ -38,6 +39,7 @@ IntunePack's user interface is designed specifically for Windows IT administrato
   - Hover: Highlighted border with background tint and scaling
   - Active: Primary color border with enhanced shadow
 - **Content**: Upload icon, descriptive text, and action buttons
+- **Workflow Tracker**: Visual progress indicators with green dots for completed steps
 - **Accessibility**: Full keyboard navigation and screen reader support
 
 ### Action Cards
@@ -47,6 +49,15 @@ IntunePack's user interface is designed specifically for Windows IT administrato
 - **Interactions**: Click to trigger file selection, hover for visual feedback
 - **Progress**: Inline progress bars during active operations
 
+### Workflow Tracker
+- **Visual Progress**: Green dot indicators for each completed step
+- **Step Labels**: Clear text descriptions for each workflow step
+- **Layout**: Vertical list with consistent spacing and alignment
+- **States**: 
+  - Incomplete: Gray dot with muted text
+  - Complete: Green dot with normal text
+- **Content**: Setup Folder, Setup File, Output Folder, Output File status
+
 ### Status Indicators
 - **Badge System**: Color-coded status badges in header
 - **Progress Bars**: Animated progress indicators during operations
@@ -55,6 +66,11 @@ IntunePack's user interface is designed specifically for Windows IT administrato
 ## Interaction Patterns
 
 ### Primary Interactions
+- **4-Step Workflow**: Guided process for package creation
+  1. Browse Folders: Select folder containing setup files
+  2. Select Setup File: Choose main executable (setup.exe, setup.msi)
+  3. Choose Output: Select destination folder for .intunewin file
+  4. Create Package: Execute package creation with progress tracking
 - **Click to Select**: Main interaction method for file operations
 - **Browse Buttons**: Dedicated buttons for file and folder selection
 - **Keyboard Shortcuts**: Ctrl+O for quick file access

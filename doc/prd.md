@@ -12,11 +12,16 @@ IntunePack is a lightweight Windows desktop application that enables IT administ
 ## Functional Requirements
 
 ### Core Features
-- **Package Creation**: Click to select files or folders to create a `.intunewin` package
+- **4-Step Package Creation Workflow**: Guided process for creating `.intunewin` packages
+  1. Browse and select folder containing setup files
+  2. Select the main setup executable (setup.exe, setup.msi, etc.)
+  3. Choose output directory for the generated package
+  4. Create package with visual progress tracking
 - **Package Extraction**: Click to select an existing `.intunewin` file to extract its contents
-- **Progress Tracking**: Real-time progress indicator during packaging or extraction operations
+- **Visual Progress Tracking**: Real-time workflow status with green dot indicators for each completed step
+- **Progress Monitoring**: Real-time progress indicator during packaging or extraction operations
 - **Logging System**: Comprehensive log output visible within the app (success, errors, warnings)
-- **File Management**: Output files saved to a default or user-selected directory
+- **File Management**: Output files saved to user-selected directory with proper verification
 
 ### User Experience Features
 - **Theme Support**: Windows-friendly dark theme optimized for IT administrators
@@ -28,8 +33,11 @@ IntunePack is a lightweight Windows desktop application that enables IT administ
 ## User Stories
 
 ### Package Creation
-- As an IT admin, I want to click to select an installer so that I can quickly generate a `.intunewin` package for Intune deployment.
-- As an IT admin, I want to select multiple files or folders so that I can package complex applications with dependencies.
+- As an IT admin, I want to follow a guided 4-step workflow so that I can create `.intunewin` packages without command-line knowledge.
+- As an IT admin, I want to select a folder containing setup files so that I can package complex applications with dependencies.
+- As an IT admin, I want to select the main setup executable so that IntuneWinAppUtil can properly detect the application type.
+- As an IT admin, I want to choose where to save the output file so that I can organize my packages effectively.
+- As an IT admin, I want to see visual progress indicators so that I know which steps I've completed and what's next.
 - As an IT admin, I want to see a progress bar so that I know how long the packaging operation will take.
 
 ### Package Extraction
@@ -51,6 +59,7 @@ IntunePack is a lightweight Windows desktop application that enables IT administ
 ### Layout Structure
 - **Header**: App branding with theme toggle and status indicator
 - **Main Area**: Large click-to-select zone with clear visual feedback
+- **Workflow Tracker**: Visual progress indicators showing completed steps in the package creation process
 - **Action Cards**: Two primary function cards (Create Package, Extract Package)
 - **Logs Panel**: Collapsible panel showing real-time operation logs
 

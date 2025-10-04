@@ -38,11 +38,15 @@ IntunePack is a Windows desktop application built with modern web technologies a
 ## Data Flow
 
 ### Package Creation Flow
-1. User clicks to select files → React detects file type and validates input
-2. React calls Tauri command `create_intunewin(input_path, output_dir)`
-3. Backend processes files → streams progress updates and logs to frontend
-4. Frontend updates state → Progress bar and log panel render in real-time
-5. Operation completes → Success/error state displayed to user
+1. User clicks "Browse Folders" → Select folder containing setup files
+2. User selects main setup executable (setup.exe, setup.msi, etc.)
+3. User chooses output directory for the generated .intunewin file
+4. User clicks "Create Package" → React calls Tauri command `create_intunewin(setup_folder, setup_file, output_folder)`
+5. Backend executes IntuneWinAppUtil.exe with correct parameters (-c, -s, -o, -q)
+6. Backend streams progress updates and logs to frontend
+7. Frontend updates workflow tracker with green dot indicators
+8. Backend verifies .intunewin file creation with multiple detection methods
+9. Operation completes → Success/error state displayed to user
 
 ### Package Extraction Flow
 1. User clicks to select `.intunewin` file → React validates file type
@@ -66,6 +70,8 @@ IntunePack is a Windows desktop application built with modern web technologies a
 - **Rust**: System programming language for performance and safety
 - **Serde**: Serialization framework for JSON communication
 - **Tauri Plugin Opener**: File system integration
+- **IntuneWinAppUtil.exe**: Microsoft's official tool for .intunewin package creation
+- **IntuneWinAppUtilDecoder.exe**: Third-party tool for .intunewin package extraction
 
 ### Development Tools
 - **Node.js**: JavaScript runtime for development
@@ -78,6 +84,7 @@ IntunePack is a Windows desktop application built with modern web technologies a
 ### Layout Components
 - **Header**: Application branding, theme toggle, and status indicator
 - **Click-to-Select Zone**: Central workspace for file operations
+- **Workflow Tracker**: Visual progress indicators showing completed steps in package creation
 - **Action Cards**: Primary function buttons (Create Package, Extract Package)
 - **Logs Panel**: Collapsible panel for operation monitoring and debugging
 
@@ -91,12 +98,30 @@ IntunePack is a Windows desktop application built with modern web technologies a
 
 ### Tauri Commands
 ```rust
-// Package Creation
-create_intunewin(input_path: String, output_dir: String) -> Result<OperationResult, String>
+// Package Creation (Updated with correct parameters)
+create_intunewin(setup_folder: String, setup_file: String, output_folder: String) -> Result<OperationResult, String>
 
 // Package Extraction  
 extract_intunewin(file_path: String, output_dir: String) -> Result<OperationResult, String>
 ```
+
+### IntuneWinAppUtil Integration
+The application integrates with Microsoft's IntuneWinAppUtil.exe using the correct command-line syntax:
+
+```bash
+IntuneWinAppUtil.exe -c <setup_folder> -s <setup_file> -o <output_folder> -q
+```
+
+**Parameters:**
+- `-c`: Setup folder containing all application files
+- `-s`: Main setup executable (setup.exe, setup.msi, etc.)
+- `-o`: Output folder for the generated .intunewin file
+- `-q`: Quiet mode to avoid interactive prompts
+
+**File Detection:**
+- Primary: Checks for expected filename pattern (setup_file_name.intunewin)
+- Fallback: Scans output directory for any .intunewin files
+- Verification: Confirms file creation before reporting success
 
 ### Message Format
 ```json

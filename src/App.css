@@ -77,6 +77,28 @@
   filter: drop-shadow(0 0 2em #24c8db);
 }
 
+/* IntunePack Logo Styling */
+.app-logo {
+  height: 4rem; /* 64px - large and prominent for header */
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.2s ease-in-out, filter 0.3s ease-in-out;
+}
+
+.app-logo:hover {
+  transform: scale(1.05);
+}
+
+/* Light theme logo adjustments - enhance contrast for light backgrounds */
+.app-logo {
+  filter: brightness(0.85) contrast(1.5) drop-shadow(0 0 4px rgba(0, 0, 0, 0.15));
+}
+
+/* Dark theme logo adjustments - perfect as-is with subtle enhancement */
+.dark .app-logo {
+  filter: brightness(1.05) contrast(1.1);
+}
+
 .row {
   display: flex;
   justify-content: center;

@@ -364,7 +364,13 @@ function App() {
       {/* Header */}
       <header className="border-b border-border p-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-foreground">IntunePack</h1>
+          <div className="flex items-center gap-3">
+            <img 
+              src="/logo.png" 
+              alt="IntunePack Logo" 
+              className="app-logo"
+            />
+          </div>
           <div className="flex items-center gap-4">
             <Button
               variant="outline"
