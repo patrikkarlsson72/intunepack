@@ -25,6 +25,7 @@ function App() {
   const [logs, setLogs] = useState<string[]>([]);
   const [currentOperation, setCurrentOperation] = useState<'create' | 'extract' | null>(null);
   const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
+  const [selectedFilePath, setSelectedFilePath] = useState<string | null>(null);
 
   // Set up event listeners for progress updates
   useEffect(() => {
@@ -84,6 +85,11 @@ function App() {
       console.log('Files dropped:', files);
       setDroppedFiles(files);
       
+      // Store the first file path (for drag and drop, we'll use the file name as path)
+      // Note: In a real scenario, you might want to use a different approach for drag and drop
+      const firstFile = files[0];
+      setSelectedFilePath(firstFile.name);
+      
       // Determine operation type based on file extension
       const hasIntuneWin = files.some(file => file.name.toLowerCase().endsWith('.intunewin'));
       console.log('Has IntuneWin file:', hasIntuneWin);
@@ -107,16 +113,24 @@ function App() {
     setLogs([]);
     
     try {
-      // Open file dialog to select input files/folders
-      const selectedPath = await openDialog({
-        title: 'Select files or folder to package',
-        directory: false,
-        multiple: false,
-      });
+      // Use the already selected file path if available, otherwise open file dialog
+      let selectedPath = selectedFilePath;
       
       if (!selectedPath) {
-        setStatus('idle');
-        return;
+        // Open file dialog to select input files/folders
+        selectedPath = await openDialog({
+          title: 'Select files or folder to package',
+          directory: false,
+          multiple: false,
+        });
+        
+        if (!selectedPath) {
+          setStatus('idle');
+          return;
+        }
+        
+        // Store the selected file path for future use
+        setSelectedFilePath(selectedPath);
       }
       
       // Open folder dialog to select output directory
@@ -151,20 +165,28 @@ function App() {
     setLogs([]);
     
     try {
-      // Open file dialog to select .intunewin file
-      const selectedFile = await openDialog({
-        title: 'Select .intunewin file to extract',
-        directory: false,
-        multiple: false,
-        filters: [{
-          name: 'IntuneWin Files',
-          extensions: ['intunewin']
-        }]
-      });
+      // Use the already selected file path if available, otherwise open file dialog
+      let selectedFile = selectedFilePath;
       
       if (!selectedFile) {
-        setStatus('idle');
-        return;
+        // Open file dialog to select .intunewin file
+        selectedFile = await openDialog({
+          title: 'Select .intunewin file to extract',
+          directory: false,
+          multiple: false,
+          filters: [{
+            name: 'IntuneWin Files',
+            extensions: ['intunewin']
+          }]
+        });
+        
+        if (!selectedFile) {
+          setStatus('idle');
+          return;
+        }
+        
+        // Store the selected file path for future use
+        setSelectedFilePath(selectedFile);
       }
       
       // Open folder dialog to select output directory
@@ -201,6 +223,9 @@ function App() {
       });
       
       if (selectedFile) {
+        // Store the full file path
+        setSelectedFilePath(selectedFile);
+        
         // Determine operation type based on file extension
         if (selectedFile.toLowerCase().endsWith('.intunewin')) {
           setCurrentOperation('extract');
@@ -224,12 +249,20 @@ function App() {
       });
       
       if (selectedFolder) {
+        // Store the full folder path
+        setSelectedFilePath(selectedFolder);
         setCurrentOperation('create');
         setDroppedFiles([{ name: selectedFolder.split('/').pop() || selectedFolder } as File]);
       }
     } catch (error) {
       console.error('Error opening folder dialog:', error);
     }
+  };
+
+  const clearSelectedFile = () => {
+    setSelectedFilePath(null);
+    setDroppedFiles([]);
+    setCurrentOperation(null);
   };
 
   const getStatusBadge = () => {
@@ -318,6 +351,9 @@ function App() {
                     Extract Package
                   </Button>
                 )}
+                <Button variant="outline" onClick={clearSelectedFile} disabled={status === 'processing'}>
+                  Clear
+                </Button>
               </div>
             </div>
           )}
