@@ -82,17 +82,26 @@ IntunePack is a Windows desktop application built with modern web technologies a
 ## User Interface Design
 
 ### Layout Components
-- **Header**: Application branding, theme toggle, and status indicator
+- **Header**: Application branding with custom logo, theme toggle, and status indicator
 - **Click-to-Select Zone**: Central workspace for file operations
 - **Workflow Tracker**: Visual progress indicators showing completed steps in package creation
 - **Action Cards**: Primary function buttons (Create Package, Extract Package)
 - **Logs Panel**: Collapsible panel for operation monitoring and debugging
+
+### Branding and Logo System
+- **Custom Logo**: Professional 3D wireframe box with upward arrow icon
+- **Theme-Adaptive Display**: Automatic switching between light and dark theme logo versions
+- **Light Theme Logo**: Dark gray text with blue wireframe box for optimal contrast
+- **Dark Theme Logo**: White text with blue wireframe box for maximum visibility
+- **Implementation**: Conditional rendering based on theme state (`theme === 'dark' ? "/logodarktheme.png" : "/logo.png"`)
+- **Styling**: 64px height (4rem) with hover effects and smooth transitions
 
 ### Theme System
 - **Windows-Friendly Dark Theme**: Optimized for IT administrators
 - **Color Palette**: Windows 11 dark mode colors for familiarity
 - **Accessibility**: High contrast ratios and clear typography
 - **Responsive Design**: Adapts to different window sizes
+- **Logo Integration**: Seamless logo switching with theme changes
 
 ## API Design
 

@@ -57,11 +57,18 @@ IntunePack is a lightweight Windows desktop application that enables IT administ
 - **Accessibility**: High contrast and clear typography for long work sessions
 
 ### Layout Structure
-- **Header**: App branding with theme toggle and status indicator
+- **Header**: App branding with custom logo, theme toggle and status indicator
 - **Main Area**: Large click-to-select zone with clear visual feedback
 - **Workflow Tracker**: Visual progress indicators showing completed steps in the package creation process
 - **Action Cards**: Two primary function cards (Create Package, Extract Package)
 - **Logs Panel**: Collapsible panel showing real-time operation logs
+
+### Branding and Visual Identity
+- **Custom Logo**: Professional 3D wireframe box with upward arrow icon representing packaging and deployment
+- **Theme-Adaptive Logo**: Dual logo system that automatically switches between light and dark theme versions
+- **Color Scheme**: Professional blue (#2563EB) and neutral grays matching Windows design language
+- **Typography**: Clean, modern sans-serif fonts optimized for readability
+- **Icon Design**: Consistent wireframe aesthetic with upward arrow symbolizing upload/deployment
 
 ### Technical Implementation
 - **Frontend**: React with TypeScript, Vite bundler

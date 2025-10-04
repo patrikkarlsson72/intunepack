@@ -3,13 +3,30 @@
 ## Design Philosophy
 IntunePack's user interface is designed specifically for Windows IT administrators, prioritizing familiarity, efficiency, and professional appearance. The design follows Windows 11 design principles while maintaining the simplicity and clarity needed for enterprise environments.
 
+## Branding and Visual Identity
+
+### Logo Design
+- **Concept**: 3D wireframe box with upward arrow representing packaging, deployment, and file transfer
+- **Icon**: Clean wireframe aesthetic with professional blue (#2563EB) color scheme
+- **Typography**: Modern sans-serif font with "INTUNEPACK" text
+- **Theme Adaptation**: Dual logo system for optimal visibility in both light and dark themes
+- **Implementation**: Automatic switching via React conditional rendering based on theme state
+
+### Color Palette
+- **Primary Blue**: #2563EB (blue-600) for icons and accents
+- **Light Theme Text**: Dark gray (#374151) for optimal contrast on light backgrounds
+- **Dark Theme Text**: Pure white (#FFFFFF) for maximum visibility on dark backgrounds
+- **Background**: Transparent with theme-appropriate contrast
+
 ## Layout Structure
 
 ### Header Section
-- **App Branding**: "IntunePack" title with clean, professional typography
+- **Custom Logo**: Professional 3D wireframe box with upward arrow icon representing packaging and deployment
+- **Theme-Adaptive Logo**: Automatic switching between light theme (dark gray text) and dark theme (white text) versions
+- **Logo Sizing**: 64px height (4rem) for optimal header visibility and professional appearance
 - **Theme Toggle**: Sun/Moon icon for light/dark mode switching
 - **Status Indicator**: Real-time status badge (Ready, Processing, Completed, Failed)
-- **Layout**: Horizontal layout with left-aligned branding and right-aligned controls
+- **Layout**: Horizontal layout with left-aligned logo branding and right-aligned controls
 
 ### Central Workspace
 - **Click-to-Select Zone**: Large, prominent area for file operations

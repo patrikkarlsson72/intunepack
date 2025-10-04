@@ -134,6 +134,18 @@ IntunePack is designed specifically for Windows IT administrators, prioritizing:
 - **Professional**: Enterprise-ready appearance and functionality
 - **Accessibility**: Inclusive design for all users
 
+## 🎨 Branding & Logo
+
+IntunePack features a custom logo that automatically adapts to your theme preference:
+
+- **Light Theme**: Dark gray text with blue wireframe box icon
+- **Dark Theme**: White text with blue wireframe box icon  
+- **Design**: 3D wireframe box with upward arrow representing packaging and deployment
+- **Colors**: Professional blue (#2563EB) and neutral grays for maximum readability
+- **Theme Switching**: Automatic logo switching based on user's light/dark theme preference
+
+The logo is optimized for both themes to ensure perfect visibility and professional appearance in all lighting conditions.
+
 ## 🤝 Contributing
 
 We welcome contributions! Please see our contributing guidelines and code of conduct.
