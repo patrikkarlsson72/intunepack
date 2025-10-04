@@ -12,7 +12,7 @@ IntunePack is a Windows desktop application built with modern web technologies a
 - **Backend**: Rust-based Tauri commands for file system operations and package processing
 
 ### Core Logic
-- **File Detection**: Automatically detect dropped file types (`.exe`, `.msi`, folders, or `.intunewin`)
+- **File Detection**: Automatically detect selected file types (`.exe`, `.msi`, folders, or `.intunewin`)
 - **Package Operations**: Backend Rust commands handle `.intunewin` creation and extraction
 - **Real-time Feedback**: Progress indicators and logging system for operation monitoring
 - **Error Handling**: Comprehensive error reporting and user-friendly messages
@@ -38,14 +38,14 @@ IntunePack is a Windows desktop application built with modern web technologies a
 ## Data Flow
 
 ### Package Creation Flow
-1. User drags/drops files → React detects file type and validates input
+1. User clicks to select files → React detects file type and validates input
 2. React calls Tauri command `create_intunewin(input_path, output_dir)`
 3. Backend processes files → streams progress updates and logs to frontend
 4. Frontend updates state → Progress bar and log panel render in real-time
 5. Operation completes → Success/error state displayed to user
 
 ### Package Extraction Flow
-1. User drags/drops `.intunewin` file → React validates file type
+1. User clicks to select `.intunewin` file → React validates file type
 2. React calls Tauri command `extract_intunewin(file_path, output_dir)`
 3. Backend extracts package contents → streams progress and logs
 4. Frontend displays extraction progress and results
@@ -77,7 +77,7 @@ IntunePack is a Windows desktop application built with modern web technologies a
 
 ### Layout Components
 - **Header**: Application branding, theme toggle, and status indicator
-- **Drag-and-Drop Zone**: Central workspace for file operations
+- **Click-to-Select Zone**: Central workspace for file operations
 - **Action Cards**: Primary function buttons (Create Package, Extract Package)
 - **Logs Panel**: Collapsible panel for operation monitoring and debugging
 

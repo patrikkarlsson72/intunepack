@@ -1,7 +1,7 @@
 # Product Requirements Document – IntunePack
 
 ## Elevator Pitch
-IntunePack is a lightweight Windows desktop application that enables IT administrators to easily create and extract `.intunewin` files for Microsoft Intune deployment. With an intuitive drag-and-drop interface and Windows-friendly design, the app eliminates the need for complex command-line usage, making packaging tasks faster and more accessible for enterprise IT teams.
+IntunePack is a lightweight Windows desktop application that enables IT administrators to easily create and extract `.intunewin` files for Microsoft Intune deployment. With an intuitive click-to-select interface and Windows-friendly design, the app eliminates the need for complex command-line usage, making packaging tasks faster and more accessible for enterprise IT teams.
 
 ## Who is this app for
 - **Primary Users**: IT administrators managing application deployments in Microsoft Intune
@@ -12,8 +12,8 @@ IntunePack is a lightweight Windows desktop application that enables IT administ
 ## Functional Requirements
 
 ### Core Features
-- **Package Creation**: Drag and drop files or folders into the app to create a `.intunewin` package
-- **Package Extraction**: Drag and drop an existing `.intunewin` file to extract its contents
+- **Package Creation**: Click to select files or folders to create a `.intunewin` package
+- **Package Extraction**: Click to select an existing `.intunewin` file to extract its contents
 - **Progress Tracking**: Real-time progress indicator during packaging or extraction operations
 - **Logging System**: Comprehensive log output visible within the app (success, errors, warnings)
 - **File Management**: Output files saved to a default or user-selected directory
@@ -23,16 +23,17 @@ IntunePack is a lightweight Windows desktop application that enables IT administ
 - **Responsive Design**: Clean, professional interface suitable for enterprise environments
 - **Error Handling**: Clear error messages and troubleshooting information
 - **Status Indicators**: Visual feedback for operation states (ready, processing, completed, failed)
+- **Keyboard Shortcuts**: Ctrl+O for quick file access
 
 ## User Stories
 
 ### Package Creation
-- As an IT admin, I want to drag and drop an installer into the app so that I can quickly generate a `.intunewin` package for Intune deployment.
+- As an IT admin, I want to click to select an installer so that I can quickly generate a `.intunewin` package for Intune deployment.
 - As an IT admin, I want to select multiple files or folders so that I can package complex applications with dependencies.
 - As an IT admin, I want to see a progress bar so that I know how long the packaging operation will take.
 
 ### Package Extraction
-- As an IT admin, I want to drag and drop a `.intunewin` file so that I can extract its contents without using the command line.
+- As an IT admin, I want to click to select a `.intunewin` file so that I can extract its contents without using the command line.
 - As an IT admin, I want to view the structure of an existing package so that I can understand its contents before deployment.
 
 ### Monitoring and Troubleshooting
@@ -49,7 +50,7 @@ IntunePack is a lightweight Windows desktop application that enables IT administ
 
 ### Layout Structure
 - **Header**: App branding with theme toggle and status indicator
-- **Main Area**: Large drag-and-drop zone with clear visual feedback
+- **Main Area**: Large click-to-select zone with clear visual feedback
 - **Action Cards**: Two primary function cards (Create Package, Extract Package)
 - **Logs Panel**: Collapsible panel showing real-time operation logs
 

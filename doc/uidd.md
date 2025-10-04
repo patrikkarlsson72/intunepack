@@ -12,7 +12,7 @@ IntunePack's user interface is designed specifically for Windows IT administrato
 - **Layout**: Horizontal layout with left-aligned branding and right-aligned controls
 
 ### Central Workspace
-- **Drag-and-Drop Zone**: Large, prominent area for file operations
+- **Click-to-Select Zone**: Large, prominent area for file operations
 - **Visual Feedback**: Dynamic hover states with scaling and color changes
 - **Instructions**: Clear text guidance for supported file types
 - **Action Buttons**: Browse Files and Browse Folders for manual selection
@@ -31,11 +31,11 @@ IntunePack's user interface is designed specifically for Windows IT administrato
 
 ## Core Components
 
-### Drag-and-Drop Zone
+### Click-to-Select Zone
 - **Size**: Large central area taking up majority of workspace
 - **Visual States**:
   - Default: Dashed border with subtle hover effects
-  - Drag Over: Highlighted border with background tint and scaling
+  - Hover: Highlighted border with background tint and scaling
   - Active: Primary color border with enhanced shadow
 - **Content**: Upload icon, descriptive text, and action buttons
 - **Accessibility**: Full keyboard navigation and screen reader support
@@ -55,8 +55,9 @@ IntunePack's user interface is designed specifically for Windows IT administrato
 ## Interaction Patterns
 
 ### Primary Interactions
-- **Drag and Drop**: Main interaction method for file operations
-- **Click to Browse**: Alternative file selection method
+- **Click to Select**: Main interaction method for file operations
+- **Browse Buttons**: Dedicated buttons for file and folder selection
+- **Keyboard Shortcuts**: Ctrl+O for quick file access
 - **Theme Toggle**: One-click dark/light mode switching
 - **Log Panel**: Expandable/collapsible for operation monitoring
 
