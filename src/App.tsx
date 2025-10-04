@@ -45,26 +45,45 @@ function App() {
     };
   }, []);
 
+  // Set up keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl+O for open file dialog
+      if (e.ctrlKey && e.key === 'o') {
+        e.preventDefault();
+        handleBrowseFiles();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('Drag enter event triggered');
+    console.log('🎯 Drag enter event triggered');
+    console.log('DataTransfer types:', Array.from(e.dataTransfer.types));
+    console.log('DataTransfer items:', e.dataTransfer.items.length);
     setIsDragOver(true);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('Drag over event triggered');
-    console.log('DataTransfer types:', e.dataTransfer.types);
+    console.log('🎯 Drag over event triggered');
+    console.log('DataTransfer types:', Array.from(e.dataTransfer.types));
     console.log('DataTransfer items length:', e.dataTransfer.items.length);
+    console.log('DataTransfer effectAllowed:', e.dataTransfer.effectAllowed);
     setIsDragOver(true);
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('Drag leave event triggered');
+    console.log('🎯 Drag leave event triggered');
     setIsDragOver(false);
   };
 
@@ -73,16 +92,18 @@ function App() {
     e.stopPropagation();
     setIsDragOver(false);
     
-    console.log('Drop event triggered');
+    console.log('🎯 Drop event triggered!');
     console.log('DataTransfer files:', e.dataTransfer.files);
     console.log('DataTransfer items:', e.dataTransfer.items);
-    console.log('DataTransfer types:', e.dataTransfer.types);
+    console.log('DataTransfer types:', Array.from(e.dataTransfer.types));
+    console.log('DataTransfer effectAllowed:', e.dataTransfer.effectAllowed);
     
     const files = Array.from(e.dataTransfer.files);
+    console.log('Files array length:', files.length);
     console.log('Files array:', files);
     
     if (files.length > 0) {
-      console.log('Files dropped:', files);
+      console.log('✅ Files dropped successfully:', files);
       setDroppedFiles(files);
       
       // Store the first file path (for drag and drop, we'll use the file name as path)
@@ -96,13 +117,13 @@ function App() {
       
       if (hasIntuneWin) {
         setCurrentOperation('extract');
-        console.log('Set operation to extract');
+        console.log('✅ Set operation to extract');
       } else {
         setCurrentOperation('create');
-        console.log('Set operation to create');
+        console.log('✅ Set operation to create');
       }
     } else {
-      console.log('No files found in drop event');
+      console.log('❌ No files found in drop event');
     }
   };
 
@@ -168,7 +189,10 @@ function App() {
       // Use the already selected file path if available, otherwise open file dialog
       let selectedFile = selectedFilePath;
       
+      console.log('🔍 Extract Package - selectedFilePath:', selectedFilePath);
+      
       if (!selectedFile) {
+        console.log('📁 No file selected, opening file dialog...');
         // Open file dialog to select .intunewin file
         selectedFile = await openDialog({
           title: 'Select .intunewin file to extract',
@@ -187,6 +211,9 @@ function App() {
         
         // Store the selected file path for future use
         setSelectedFilePath(selectedFile);
+        console.log('💾 Stored new file path:', selectedFile);
+      } else {
+        console.log('✅ Using stored file path:', selectedFile);
       }
       
       // Open folder dialog to select output directory
@@ -216,23 +243,29 @@ function App() {
 
   const handleBrowseFiles = async () => {
     try {
+      console.log('📂 Browse Files clicked');
       const selectedFile = await openDialog({
         title: 'Select file to process',
         directory: false,
         multiple: false,
       });
       
+      console.log('📁 Selected file:', selectedFile);
+      
       if (selectedFile) {
         // Store the full file path
         setSelectedFilePath(selectedFile);
+        console.log('💾 Stored file path in state:', selectedFile);
         
         // Determine operation type based on file extension
         if (selectedFile.toLowerCase().endsWith('.intunewin')) {
           setCurrentOperation('extract');
           setDroppedFiles([{ name: selectedFile.split('/').pop() || selectedFile } as File]);
+          console.log('✅ Set operation to extract for .intunewin file');
         } else {
           setCurrentOperation('create');
           setDroppedFiles([{ name: selectedFile.split('/').pop() || selectedFile } as File]);
+          console.log('✅ Set operation to create for non-.intunewin file');
         }
       }
     } catch (error) {
@@ -316,15 +349,15 @@ function App() {
               : 'border-border hover:border-primary/60 hover:bg-muted/30'
             }
           `}
-          onDragEnter={handleDragEnter}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
+          style={{ minHeight: '200px' }}
         >
           <Upload className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
-          <h2 className="text-xl font-semibold mb-2">Drop files here</h2>
+          <h2 className="text-xl font-semibold mb-2">Select files to process</h2>
           <p className="text-muted-foreground mb-4">
-            Drag and drop installers, folders, or .intunewin files
+            Use the buttons below to select files or folders for processing
+          </p>
+          <p className="text-xs text-muted-foreground/70 mb-4">
+            💡 Tip: Use Ctrl+O to quickly open the file browser
           </p>
           <div className="flex gap-4 justify-center">
             <Button variant="outline" onClick={handleBrowseFiles}>Browse Files</Button>
