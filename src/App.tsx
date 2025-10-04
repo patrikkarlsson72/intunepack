@@ -26,6 +26,9 @@ function App() {
   const [currentOperation, setCurrentOperation] = useState<'create' | 'extract' | null>(null);
   const [droppedFiles, setDroppedFiles] = useState<File[]>([]);
   const [selectedFilePath, setSelectedFilePath] = useState<string | null>(null);
+  const [selectedSetupFile, setSelectedSetupFile] = useState<string | null>(null);
+  const [outputFolder, setOutputFolder] = useState<string | null>(null);
+  const [outputFilename, setOutputFilename] = useState<string>("");
 
   // Set up event listeners for progress updates
   useEffect(() => {
@@ -134,42 +137,82 @@ function App() {
     setLogs([]);
     
     try {
-      // Use the already selected file path if available, otherwise open file dialog
-      let selectedPath = selectedFilePath;
+      // Step 1: Select setup folder (if not already selected)
+      let setupFolder = selectedFilePath;
       
-      if (!selectedPath) {
-        // Open file dialog to select input files/folders
-        selectedPath = await openDialog({
-          title: 'Select files or folder to package',
-          directory: false,
+      if (!setupFolder) {
+        setupFolder = await openDialog({
+          title: 'Select folder containing setup files',
+          directory: true,
           multiple: false,
         });
         
-        if (!selectedPath) {
+        if (!setupFolder) {
           setStatus('idle');
           return;
         }
         
-        // Store the selected file path for future use
-        setSelectedFilePath(selectedPath);
+        setSelectedFilePath(setupFolder);
       }
       
-      // Open folder dialog to select output directory
-      const outputDir = await openDialog({
-        title: 'Select output directory',
-        directory: true,
-        multiple: false,
-      });
+      // Step 2: Select setup file
+      let setupFile = selectedSetupFile;
+      
+      if (!setupFile) {
+        setupFile = await openDialog({
+          title: 'Select setup file (e.g., setup.exe, setup.msi)',
+          directory: false,
+          multiple: false,
+          filters: [
+            { name: 'Executable Files', extensions: ['exe', 'msi'] },
+            { name: 'All Files', extensions: ['*'] }
+          ]
+        });
+        
+        if (!setupFile) {
+          setStatus('idle');
+          return;
+        }
+        
+        // Extract just the filename from the full path
+        const filename = setupFile.split('/').pop() || setupFile.split('\\').pop() || setupFile;
+        setSelectedSetupFile(filename);
+        setupFile = filename;
+      }
+      
+      // Step 3: Select output folder
+      let outputDir = outputFolder;
       
       if (!outputDir) {
-        setStatus('idle');
-        return;
+        outputDir = await openDialog({
+          title: 'Select output directory for .intunewin file',
+          directory: true,
+          multiple: false,
+        });
+        
+        if (!outputDir) {
+          setStatus('idle');
+          return;
+        }
+        
+        setOutputFolder(outputDir);
       }
       
+      // Step 4: Get output filename
+      let filename = outputFilename;
+      
+      if (!filename) {
+        // Generate default filename based on setup file
+        const baseName = setupFile.replace(/\.[^/.]+$/, ""); // Remove extension
+        filename = `${baseName}.intunewin`;
+        setOutputFilename(filename);
+      }
+      
+      // Now call the create_intunewin command with correct parameters
       const result = await invoke('create_intunewin', {
-        inputPath: selectedPath,
-        outputDir,
-        setupFile: null
+        setupFolder,
+        setupFile,
+        outputFolder: outputDir
       });
       
       console.log('Package created:', result);
@@ -294,6 +337,9 @@ function App() {
 
   const clearSelectedFile = () => {
     setSelectedFilePath(null);
+    setSelectedSetupFile(null);
+    setOutputFolder(null);
+    setOutputFilename("");
     setDroppedFiles([]);
     setCurrentOperation(null);
   };
@@ -364,19 +410,32 @@ function App() {
             <Button variant="outline" onClick={handleBrowseFolders}>Browse Folders</Button>
           </div>
           
-          {/* Show dropped files */}
-          {droppedFiles.length > 0 && (
+          {/* Show selected files and workflow status */}
+          {(droppedFiles.length > 0 || selectedFilePath || selectedSetupFile || outputFolder) && (
             <div className="mt-4 p-4 bg-muted/30 rounded-lg">
-              <h3 className="font-medium mb-2">Files ready for processing:</h3>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                {droppedFiles.map((file, index) => (
-                  <li key={index}>• {file.name}</li>
-                ))}
-              </ul>
+              <h3 className="font-medium mb-2">Package Creation Workflow:</h3>
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${selectedFilePath ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                  <span>Setup Folder: {selectedFilePath ? selectedFilePath.split('/').pop() || selectedFilePath.split('\\').pop() : 'Not selected'}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${selectedSetupFile ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                  <span>Setup File: {selectedSetupFile || 'Not selected'}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${outputFolder ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                  <span>Output Folder: {outputFolder ? outputFolder.split('/').pop() || outputFolder.split('\\').pop() : 'Not selected'}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${outputFilename ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                  <span>Output File: {outputFilename || 'Auto-generated'}</span>
+                </div>
+              </div>
               <div className="mt-3 flex gap-2 justify-center">
                 {currentOperation === 'create' && (
                   <Button onClick={handleCreatePackage} disabled={status === 'processing'}>
-                    Create Package
+                    {status === 'processing' ? 'Creating Package...' : 'Create Package'}
                   </Button>
                 )}
                 {currentOperation === 'extract' && (

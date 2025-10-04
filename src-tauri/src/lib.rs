@@ -125,9 +125,9 @@ async fn extract_intunewin(
 #[tauri::command]
 async fn create_intunewin(
     app: AppHandle,
-    input_path: String,
-    output_dir: String,
-    setup_file: Option<String>,
+    setup_folder: String,
+    setup_file: String,
+    output_folder: String,
 ) -> Result<OperationResult, String> {
     // Emit initial progress
     let progress_update = ProgressUpdate {
@@ -141,13 +141,19 @@ async fn create_intunewin(
     // Get the path to the IntuneWinAppUtil executable
     let util_path = get_util_path()?;
     
-    // Validate input path exists
-    if !std::path::Path::new(&input_path).exists() {
-        return Err("Input path does not exist".to_string());
+    // Validate setup folder exists
+    if !std::path::Path::new(&setup_folder).exists() {
+        return Err("Setup folder does not exist".to_string());
+    }
+
+    // Validate setup file exists
+    let setup_file_path = std::path::Path::new(&setup_folder).join(&setup_file);
+    if !setup_file_path.exists() {
+        return Err(format!("Setup file '{}' not found in folder '{}'", setup_file, setup_folder));
     }
 
     // Create output directory if it doesn't exist
-    if let Err(e) = std::fs::create_dir_all(&output_dir) {
+    if let Err(e) = std::fs::create_dir_all(&output_folder) {
         return Err(format!("Failed to create output directory: {}", e));
     }
 
@@ -160,25 +166,44 @@ async fn create_intunewin(
     app.emit("progress-update", &progress_update)
         .map_err(|e| e.to_string())?;
 
-    // Build the command
-    let mut cmd = Command::new(&util_path);
-    cmd.arg(&input_path);
-    cmd.arg(&output_dir);
-    
-    // Add setup file if provided
-    if let Some(setup) = setup_file {
-        cmd.arg("-s").arg(&setup);
-    }
-
-    // Execute the utility
-    let output = cmd
+    // Build the command with correct parameters
+    // IntuneWinAppUtil -c <setup_folder> -s <source_setup_file> -o <output_folder> -q
+    let output = Command::new(&util_path)
+        .arg("-c")
+        .arg(&setup_folder)
+        .arg("-s")
+        .arg(&setup_file)
+        .arg("-o")
+        .arg(&output_folder)
+        .arg("-q") // Quiet mode to avoid interactive prompts
         .output()
         .map_err(|e| format!("Failed to execute IntuneWinAppUtil: {}", e))?;
+
+    // Check if the output file was actually created
+    // IntuneWinAppUtil creates the file with the setup file name + .intunewin extension
+    let setup_file_base = setup_file.replace(".exe", "").replace(".msi", ""); // Remove common extensions
+    let expected_output_file = std::path::Path::new(&output_folder).join(format!("{}.intunewin", setup_file_base));
+    let file_created = expected_output_file.exists();
+
+    // Also check for any .intunewin files in the output directory as fallback
+    let mut any_intunewin_found = false;
+    if !file_created {
+        if let Ok(entries) = std::fs::read_dir(&output_folder) {
+            any_intunewin_found = entries
+                .filter_map(|e| e.ok())
+                .any(|entry| {
+                    let path = entry.path();
+                    path.is_file() && path.extension().map_or(false, |ext| ext == "intunewin")
+                });
+        }
+    }
+
+    let success = output.status.success() && (file_created || any_intunewin_found);
 
     // Emit completion progress
     let progress_update = ProgressUpdate {
         progress: 100,
-        message: if output.status.success() {
+        message: if success {
             "Package created successfully".to_string()
         } else {
             "Package creation failed".to_string()
@@ -188,15 +213,31 @@ async fn create_intunewin(
     app.emit("progress-update", &progress_update)
         .map_err(|e| e.to_string())?;
 
-    if output.status.success() {
+    if success {
+        let final_message = if file_created {
+            format!("Package created successfully: {}", expected_output_file.display())
+        } else {
+            "Package created successfully (check output folder for .intunewin file)".to_string()
+        };
+        
         Ok(OperationResult {
             status: "success".to_string(),
-            message: "Package created successfully".to_string(),
+            message: final_message,
             progress: 100,
         })
     } else {
-        let error_message = String::from_utf8_lossy(&output.stderr);
-        Err(format!("IntuneWinAppUtil failed: {}", error_message))
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        let error_details = if !stdout.is_empty() && !stderr.is_empty() {
+            format!("IntuneWinAppUtil failed:\nSTDOUT: {}\nSTDERR: {}", stdout, stderr)
+        } else if !stderr.is_empty() {
+            format!("IntuneWinAppUtil failed: {}", stderr)
+        } else if !stdout.is_empty() {
+            format!("IntuneWinAppUtil failed: {}", stdout)
+        } else {
+            "IntuneWinAppUtil failed with no output".to_string()
+        };
+        Err(error_details)
     }
 }
 
