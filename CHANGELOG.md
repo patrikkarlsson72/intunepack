@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Console Input Issue**: Resolved System.InvalidOperationException during .intunewin extraction by redirecting stdin to null
+- **Double File Selection**: Fixed workflow where users had to select .intunewin file twice during extraction
+- **File Path Management**: Improved state management to properly track selected files with full paths
+- **Drag and Drop Limitations**: Replaced non-working drag and drop with enhanced click-to-select interface
+- **User Experience**: Streamlined single-click workflow for file selection and extraction
+
+### Improved
+- **Error Detection**: Enhanced extraction success detection by checking for actual output files (.zip and extracted folders)
+- **Error Reporting**: Added detailed stdout/stderr information for better debugging
+- **User Interface**: Updated UI text and visual feedback to reflect click-to-select functionality
+- **Accessibility**: Added keyboard shortcuts (Ctrl+O) for quick file access
+- **Workflow**: Simplified file selection process with clear visual guidance
+
 ### Added
 - **IntuneWinAppUtilDecoder Integration**: Complete integration with Microsoft Intune Win32 Content Prep Tool
 - **Package Creation**: Full .intunewin file creation using IntuneWinAppUtil.exe
@@ -15,8 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **File Dialog Integration**: Native Windows file and folder selection dialogs
 - **Error Handling**: Comprehensive error messages and troubleshooting guidance
 - **Executable Management**: Automatic detection and validation of required tools
-- **Card-based Drag & Drop**: Enhanced drag and drop functionality for individual operation cards
-- **Visual Drag Feedback**: Real-time visual feedback when dragging files over cards
+- **Click-to-Select Interface**: Enhanced file selection with visual feedback and keyboard shortcuts
+- **Visual Feedback**: Real-time visual feedback for file selection and operations
 - **File Type Validation**: Automatic validation for .intunewin files on extract operations
 
 ### Technical Implementation
@@ -138,6 +152,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Dialog plugin now properly initialized with default settings via Rust code
   - Application now starts successfully without configuration conflicts
 
+### User Experience and Workflow Improvements
+- **2025-01-27**: Major workflow improvements and bug fixes
+  - **Console Input Fix**: Resolved System.InvalidOperationException in IntuneWinAppUtilDecoder.exe by redirecting stdin to null
+  - **Single File Selection**: Fixed double file selection issue by improving state management and file path tracking
+  - **Click-to-Select Interface**: Replaced non-working drag and drop with reliable click-to-select functionality
+  - **Enhanced Error Detection**: Improved extraction success detection by checking for actual output files
+  - **Keyboard Shortcuts**: Added Ctrl+O shortcut for quick file access
+  - **Better User Guidance**: Updated UI text and visual feedback for clearer user experience
+  - **Debug Logging**: Added comprehensive console logging for troubleshooting and development
+
 ## Known Issues
 
 ### Current Limitations
@@ -145,6 +169,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Settings**: No user preferences or configuration persistence
 - **Batch Processing**: Single file operations only
 - **Advanced Validation**: Basic file validation without deep package inspection
+- **Drag and Drop**: Not supported due to Tauri webview limitations (replaced with click-to-select)
 - **Error Recovery**: Standard error handling without advanced recovery options
 
 ### Future Enhancements

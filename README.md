@@ -1,15 +1,16 @@
 # IntunePack
 
-A lightweight Windows desktop application that enables IT administrators to easily create and extract `.intunewin` files for Microsoft Intune deployment. With an intuitive drag-and-drop interface and Windows-friendly design, IntunePack eliminates the need for complex command-line usage, making packaging tasks faster and more accessible for enterprise IT teams.
+A lightweight Windows desktop application that enables IT administrators to easily create and extract `.intunewin` files for Microsoft Intune deployment. With an intuitive click-to-select interface and Windows-friendly design, IntunePack eliminates the need for complex command-line usage, making packaging tasks faster and more accessible for enterprise IT teams.
 
 ## 🚀 Features
 
 - **IntuneWinAppUtilDecoder Integration**: Complete integration with Microsoft Intune Win32 Content Prep Tool
 - **Package Creation**: Create .intunewin files from installers, folders, or files
 - **Package Extraction**: Extract contents from existing .intunewin files
-- **Drag & Drop Interface**: Simple file operations with visual feedback
+- **Click-to-Select Interface**: Simple file operations with visual feedback
 - **Real-time Progress**: Live status updates and operation monitoring
 - **File Dialogs**: Native Windows file and folder selection
+- **Keyboard Shortcuts**: Ctrl+O for quick file access
 - **Windows-Friendly Theme**: Optimized dark theme for IT administrators
 - **Professional UI**: Clean, enterprise-ready interface design
 - **Accessibility**: Full keyboard navigation and screen reader support
@@ -26,7 +27,7 @@ A lightweight Windows desktop application that enables IT administrators to easi
 - IntuneWinAppUtilDecoder integration for package creation and extraction
 - Real-time progress tracking and logging
 - File dialog integration for Windows-native experience
-- Drag and drop framework with operation detection
+- Click-to-select framework with operation detection
 - Windows-friendly dark theme
 - Responsive design and accessibility features
 - Comprehensive error handling and user feedback
