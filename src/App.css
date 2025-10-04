@@ -250,3 +250,51 @@ button {
     @apply bg-background text-foreground;
   }
 }
+
+/* Progress Animation Enhancements */
+@layer components {
+  .progress-container {
+    animation: fadeInUp 0.3s ease-out;
+  }
+  
+  .progress-bar {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .progress-spinner {
+    animation: spin 1s linear infinite;
+  }
+  
+  .progress-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

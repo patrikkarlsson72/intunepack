@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Upload, Package, ChevronUp, ChevronDown, Sun, Moon } from "lucide-react";
+import { Upload, Package, ChevronUp, ChevronDown, Sun, Moon, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -458,15 +458,46 @@ function App() {
                   </>
                 )}
               </div>
+              {/* Progress Display */}
+              {status === 'processing' && (
+                <div className="progress-container mt-4 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Loader2 className="h-5 w-5 progress-spinner text-primary" />
+                    <span className="font-medium text-primary progress-pulse">
+                      {currentOperation === 'create' ? 'Creating Package...' : 'Extracting Package...'}
+                    </span>
+                  </div>
+                  <Progress value={progress} className="progress-bar h-3 mb-2" />
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>{currentOperation === 'create' ? 'Packaging files' : 'Extracting files'}</span>
+                    <span className="font-medium">{progress}%</span>
+                  </div>
+                </div>
+              )}
+              
               <div className="mt-3 flex gap-2 justify-center">
                 {currentOperation === 'create' && (
                   <Button onClick={handleCreatePackage} disabled={status === 'processing'}>
-                    {status === 'processing' ? 'Creating Package...' : 'Create Package'}
+                    {status === 'processing' ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Creating...
+                      </>
+                    ) : (
+                      'Create Package'
+                    )}
                   </Button>
                 )}
                 {currentOperation === 'extract' && (
                   <Button onClick={handleExtractPackage} disabled={status === 'processing'}>
-                    Extract Package
+                    {status === 'processing' ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Extracting...
+                      </>
+                    ) : (
+                      'Extract Package'
+                    )}
                   </Button>
                 )}
                 <Button variant="outline" onClick={clearSelectedFile} disabled={status === 'processing'}>
@@ -497,9 +528,16 @@ function App() {
                 Package installers, folders, or files into a .intunewin file for Intune deployment.
               </p>
               {status === 'processing' && currentOperation === 'create' && (
-                <div className="space-y-2">
-                  <Progress value={progress} className="h-2" />
-                  <p className="text-xs text-muted-foreground">Creating package...</p>
+                <div className="progress-container space-y-3 p-3 bg-primary/5 border border-primary/20 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 progress-spinner text-primary" />
+                    <span className="text-sm font-medium text-primary progress-pulse">Creating package...</span>
+                  </div>
+                  <Progress value={progress} className="progress-bar h-2" />
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>Packaging files</span>
+                    <span className="font-medium">{progress}%</span>
+                  </div>
                 </div>
               )}
             </CardContent>
@@ -523,9 +561,16 @@ function App() {
                 Extract contents from an existing .intunewin file to view its structure.
               </p>
               {status === 'processing' && currentOperation === 'extract' && (
-                <div className="space-y-2">
-                  <Progress value={progress} className="h-2" />
-                  <p className="text-xs text-muted-foreground">Extracting package...</p>
+                <div className="progress-container space-y-3 p-3 bg-green-500/5 border border-green-500/20 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 progress-spinner text-green-500" />
+                    <span className="text-sm font-medium text-green-500 progress-pulse">Extracting package...</span>
+                  </div>
+                  <Progress value={progress} className="progress-bar h-2" />
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>Extracting files</span>
+                    <span className="font-medium">{progress}%</span>
+                  </div>
                 </div>
               )}
             </CardContent>
