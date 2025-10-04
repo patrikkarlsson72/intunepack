@@ -60,17 +60,31 @@ async fn extract_intunewin(
     app.emit("progress-update", &progress_update)
         .map_err(|e| e.to_string())?;
 
-    // Execute the decoder
+    // Execute the decoder with stdin redirected to avoid console input issues
     let output = Command::new(&decoder_path)
         .arg(&file_path)
         .arg(&output_dir)
+        .stdin(std::process::Stdio::null()) // Redirect stdin to avoid console input issues
         .output()
         .map_err(|e| format!("Failed to execute decoder: {}", e))?;
 
+    // Check if extraction was successful before emitting progress
+    let output_path = std::path::Path::new(&output_dir);
+    let has_zip_file = output_path.read_dir()
+        .map(|entries| entries.filter_map(|e| e.ok())
+            .any(|entry| {
+                let path = entry.path();
+                path.is_file() && path.extension().map_or(false, |ext| ext == "zip")
+            }))
+        .unwrap_or(false);
+    
+    let has_extracted_folder = output_path.join("extracted").is_dir();
+    let extraction_successful = output.status.success() || has_zip_file || has_extracted_folder;
+    
     // Emit completion progress
     let progress_update = ProgressUpdate {
         progress: 100,
-        message: if output.status.success() {
+        message: if extraction_successful {
             "Extraction completed successfully".to_string()
         } else {
             "Extraction failed".to_string()
@@ -80,15 +94,31 @@ async fn extract_intunewin(
     app.emit("progress-update", &progress_update)
         .map_err(|e| e.to_string())?;
 
-    if output.status.success() {
+    // Use the already computed values for the final result
+    if extraction_successful {
         Ok(OperationResult {
             status: "success".to_string(),
-            message: "Package extracted successfully".to_string(),
+            message: if has_zip_file || has_extracted_folder {
+                "Package extracted successfully".to_string()
+            } else {
+                "Extraction completed (check output directory)".to_string()
+            },
             progress: 100,
         })
     } else {
-        let error_message = String::from_utf8_lossy(&output.stderr);
-        Err(format!("Decoder failed: {}", error_message))
+        // Log both stdout and stderr for debugging
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        let error_details = if !stdout.is_empty() && !stderr.is_empty() {
+            format!("Decoder failed:\nSTDOUT: {}\nSTDERR: {}", stdout, stderr)
+        } else if !stderr.is_empty() {
+            format!("Decoder failed: {}", stderr)
+        } else if !stdout.is_empty() {
+            format!("Decoder failed: {}", stdout)
+        } else {
+            "Decoder failed with no output".to_string()
+        };
+        Err(error_details)
     }
 }
 
