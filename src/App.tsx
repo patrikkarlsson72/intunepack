@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Upload, Package, ChevronUp, ChevronDown, Sun, Moon, Loader2 } from "lucide-react";
+import { Upload, Package, ChevronUp, ChevronDown, Sun, Moon, Loader2, Info } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { AboutModal } from "@/components/AboutModal";
 import { useTheme } from "./contexts/ThemeContext";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
@@ -28,6 +29,7 @@ function App() {
   const [selectedSetupFile, setSelectedSetupFile] = useState<string | null>(null);
   const [outputFolder, setOutputFolder] = useState<string | null>(null);
   const [outputFilename, setOutputFilename] = useState<string>("");
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   // Set up event listeners for progress updates
   useEffect(() => {
@@ -297,6 +299,15 @@ function App() {
             <Button
               variant="outline"
               size="icon"
+              onClick={() => setIsAboutOpen(true)}
+              className="h-9 w-9"
+              title="About IntunePack"
+            >
+              <Info className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
               onClick={toggleTheme}
               className="h-9 w-9"
               title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
@@ -517,6 +528,12 @@ function App() {
           </div>
         )}
       </div>
+
+      {/* About Modal */}
+      <AboutModal 
+        isOpen={isAboutOpen} 
+        onClose={() => setIsAboutOpen(false)} 
+      />
     </div>
   );
 }

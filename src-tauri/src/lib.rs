@@ -17,10 +17,28 @@ pub struct ProgressUpdate {
     pub timestamp: String,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct VersionInfo {
+    pub app_version: String,
+    pub tauri_version: String,
+    pub rust_version: String,
+    pub platform: String,
+}
+
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
+}
+
+#[tauri::command]
+fn get_version_info() -> VersionInfo {
+    VersionInfo {
+        app_version: env!("CARGO_PKG_VERSION").to_string(),
+        tauri_version: tauri::VERSION.to_string(),
+        rust_version: std::env::var("RUSTC_SEMVER").unwrap_or_else(|_| "Unknown".to_string()),
+        platform: std::env::consts::OS.to_string(),
+    }
 }
 
 #[tauri::command]
@@ -283,6 +301,7 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .invoke_handler(tauri::generate_handler![
             greet,
+            get_version_info,
             extract_intunewin,
             create_intunewin
         ])

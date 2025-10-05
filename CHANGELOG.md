@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **About Section**: New About modal accessible via Info button in header
+- **Version Information**: Display of application version, Tauri version, Rust version, and platform
+- **App Details**: Comprehensive information about IntunePack features and technology stack
+- **Professional Branding**: Enhanced About dialog with consistent design and theme support
+
 ### Fixed
 - **Package Creation Workflow**: Fixed incorrect IntuneWinAppUtil.exe command parameters causing package creation failures
 - **False Error Reporting**: Resolved issue where app reported "Package creation failed" despite successful .intunewin file creation
@@ -42,11 +48,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Branding System**: Professional logo design with 3D wireframe box and upward arrow icon
 
 ### Technical Implementation
-- **Rust Backend**: Tauri commands for IntuneWin operations (`create_intunewin`, `extract_intunewin`)
+- **Rust Backend**: Tauri commands for IntuneWin operations (`create_intunewin`, `extract_intunewin`, `get_version_info`)
 - **Progress Events**: Real-time progress updates via Tauri event system
 - **File System Integration**: Proper file path handling and validation
 - **Plugin Configuration**: Shell and dialog plugin setup for system integration
 - **Error Recovery**: Graceful handling of missing executables with helpful messages
+- **Version API**: New Tauri command to fetch runtime version information from Cargo.toml and system
 
 ### Fixed
 - **Tauri v2 Compatibility**: Updated API calls from `emit_all` to `emit` with proper trait imports

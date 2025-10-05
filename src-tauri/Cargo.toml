@@ -1,6 +1,6 @@
 [package]
 name = "intunepack"
-version = "0.1.0"
+version = "1.0.0"
 description = "IntunePack - A desktop app for creating and extracting .intunewin files"
 authors = ["you"]
 edition = "2021"
