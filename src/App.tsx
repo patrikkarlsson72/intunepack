@@ -511,12 +511,14 @@ function App() {
             border: 'none'
           }}
           onMouseEnter={(e) => {
-            e.target.style.backgroundColor = 'var(--muted)';
-            e.target.style.color = 'var(--foreground)';
+            const target = e.target as HTMLElement;
+            target.style.backgroundColor = 'var(--muted)';
+            target.style.color = 'var(--foreground)';
           }}
           onMouseLeave={(e) => {
-            e.target.style.backgroundColor = 'var(--muted)';
-            e.target.style.color = 'var(--muted-foreground)';
+            const target = e.target as HTMLElement;
+            target.style.backgroundColor = 'var(--muted)';
+            target.style.color = 'var(--muted-foreground)';
           }}
           onClick={() => setIsLogsOpen(!isLogsOpen)}
         >
