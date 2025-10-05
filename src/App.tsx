@@ -503,14 +503,30 @@ function App() {
 
       {/* Logs Panel */}
       <div className="border-t border-border">
-        <Button
-          variant="ghost"
-          className="w-full justify-between p-4"
+        <button
+          className="w-full flex justify-between items-center p-4 border-0 rounded-none transition-colors bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground"
+          style={{ 
+            backgroundColor: 'var(--muted)',
+            color: 'var(--muted-foreground)',
+            border: 'none'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.backgroundColor = 'var(--muted)';
+            e.target.style.color = 'var(--foreground)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.backgroundColor = 'var(--muted)';
+            e.target.style.color = 'var(--muted-foreground)';
+          }}
           onClick={() => setIsLogsOpen(!isLogsOpen)}
         >
           <span className="font-medium">Operation Logs</span>
-          {isLogsOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronUp className="h-4 w-4" />}
-        </Button>
+          {isLogsOpen ? (
+            <ChevronDown className="h-4 w-4" />
+          ) : (
+            <ChevronUp className="h-4 w-4" />
+          )}
+        </button>
         
         {isLogsOpen && (
           <div className="border-t border-border bg-black/90 text-green-400 font-mono text-sm p-4 max-h-64 overflow-y-auto">

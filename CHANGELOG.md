@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **User Experience**: Streamlined single-click workflow for file selection and extraction
 
 ### Improved
+- **Window Size**: Increased default window dimensions from 800x600 to 900x800 for better content visibility
+- **Operation Logs Button**: Fixed background color and text visibility for proper dark theme integration
 - **Package Creation Workflow**: Implemented proper 4-step workflow with visual progress tracking
 - **Command Line Integration**: Updated to use correct IntuneWinAppUtil.exe parameters (-c, -s, -o, -q)
 - **Success Detection**: Enhanced file creation verification with multiple detection methods
