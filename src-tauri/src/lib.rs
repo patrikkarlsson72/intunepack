@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::process::Command;
-use tauri::{AppHandle, Emitter};
+use tauri::{AppHandle, Emitter, Manager};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct OperationResult {
@@ -62,7 +62,7 @@ async fn extract_intunewin(
         .map_err(|e| e.to_string())?;
 
     // Get the path to the decoder executable
-    let decoder_path = get_decoder_path()?;
+    let decoder_path = get_decoder_path(&app)?;
     
     // Validate input file exists
     if !std::path::Path::new(&file_path).exists() {
@@ -162,7 +162,7 @@ async fn create_intunewin(
         .map_err(|e| e.to_string())?;
 
     // Get the path to the IntuneWinAppUtil executable
-    let util_path = get_util_path()?;
+    let util_path = get_util_path(&app)?;
     
     // Validate setup folder exists
     if !std::path::Path::new(&setup_folder).exists() {
@@ -264,8 +264,24 @@ async fn create_intunewin(
     }
 }
 
-fn get_decoder_path() -> Result<PathBuf, String> {
-    // Try multiple possible locations for the decoder
+fn get_decoder_path(app: &AppHandle) -> Result<PathBuf, String> {
+    // Try to get the bundled resource path first
+    if let Ok(resource_path) = app.path().resource_dir() {
+        let bundled_path = resource_path.join("bin/IntuneWinAppUtilDecoder.exe");
+        if bundled_path.exists() {
+            return Ok(bundled_path);
+        }
+    }
+    
+    // Try the executable directory (where the app is running from)
+    if let Ok(exe_dir) = app.path().executable_dir() {
+        let exe_path = exe_dir.join("bin/IntuneWinAppUtilDecoder.exe");
+        if exe_path.exists() {
+            return Ok(exe_path);
+        }
+    }
+    
+    // Fallback to development paths
     let possible_paths = vec![
         PathBuf::from("src-tauri/bin/IntuneWinAppUtilDecoder.exe"),
         PathBuf::from("bin/IntuneWinAppUtilDecoder.exe"),
@@ -281,8 +297,24 @@ fn get_decoder_path() -> Result<PathBuf, String> {
     Err("IntuneWinAppUtilDecoder.exe not found. Please download it from the Microsoft Intune Win32 Content Prep Tool and place it in the bin directory.".to_string())
 }
 
-fn get_util_path() -> Result<PathBuf, String> {
-    // Try multiple possible locations for the utility
+fn get_util_path(app: &AppHandle) -> Result<PathBuf, String> {
+    // Try to get the bundled resource path first
+    if let Ok(resource_path) = app.path().resource_dir() {
+        let bundled_path = resource_path.join("bin/IntuneWinAppUtil.exe");
+        if bundled_path.exists() {
+            return Ok(bundled_path);
+        }
+    }
+    
+    // Try the executable directory (where the app is running from)
+    if let Ok(exe_dir) = app.path().executable_dir() {
+        let exe_path = exe_dir.join("bin/IntuneWinAppUtil.exe");
+        if exe_path.exists() {
+            return Ok(exe_path);
+        }
+    }
+    
+    // Fallback to development paths
     let possible_paths = vec![
         PathBuf::from("src-tauri/bin/IntuneWinAppUtil.exe"),
         PathBuf::from("bin/IntuneWinAppUtil.exe"),
