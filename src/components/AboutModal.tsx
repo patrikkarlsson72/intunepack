@@ -41,6 +41,22 @@ export function AboutModal({ isOpen, onClose }: AboutModalProps) {
     }
   }, [isOpen]);
 
+  const handleOpenGitHub = async () => {
+    try {
+      await invoke('open_url', { url: 'https://github.com/patrikkarlsson72/intunepack' });
+    } catch (error) {
+      console.error('Error opening GitHub repository:', error);
+    }
+  };
+
+  const handleOpenDocumentation = async () => {
+    try {
+      await invoke('open_url', { url: 'https://github.com/patrikkarlsson72/intunepack#readme' });
+    } catch (error) {
+      console.error('Error opening documentation:', error);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -171,11 +187,21 @@ export function AboutModal({ isOpen, onClose }: AboutModalProps) {
           <div className="space-y-3">
             <h3 className="font-semibold text-lg">Resources</h3>
             <div className="flex flex-wrap gap-2">
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2 hover:bg-primary/10 hover:border-primary/30 transition-colors"
+                onClick={handleOpenGitHub}
+              >
                 <Github className="h-4 w-4" />
                 GitHub Repository
               </Button>
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2 hover:bg-primary/10 hover:border-primary/30 transition-colors"
+                onClick={handleOpenDocumentation}
+              >
                 <ExternalLink className="h-4 w-4" />
                 Documentation
               </Button>

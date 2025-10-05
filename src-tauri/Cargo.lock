@@ -1755,6 +1755,7 @@ name = "intunepack"
 version = "1.0.0"
 dependencies = [
  "chrono",
+ "open",
  "serde",
  "serde_json",
  "tauri",

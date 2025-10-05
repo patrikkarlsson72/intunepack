@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Version Information**: Display of application version, Tauri version, Rust version, and platform
 - **App Details**: Comprehensive information about IntunePack features and technology stack
 - **Professional Branding**: Enhanced About dialog with consistent design and theme support
+- **Resource Links**: Clickable GitHub Repository and Documentation buttons with external link functionality
 
 ### Fixed
 - **Package Creation Workflow**: Fixed incorrect IntuneWinAppUtil.exe command parameters causing package creation failures

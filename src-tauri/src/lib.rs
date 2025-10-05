@@ -42,6 +42,11 @@ fn get_version_info() -> VersionInfo {
 }
 
 #[tauri::command]
+async fn open_url(url: String) -> Result<(), String> {
+    open::that(&url).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
 async fn extract_intunewin(
     app: AppHandle,
     file_path: String,
@@ -302,6 +307,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             greet,
             get_version_info,
+            open_url,
             extract_intunewin,
             create_intunewin
         ])
