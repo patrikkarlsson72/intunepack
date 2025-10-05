@@ -9,11 +9,15 @@ A lightweight Windows desktop application that enables IT administrators to easi
 - **Visual Progress Tracking**: Real-time workflow status with green dot indicators for each completed step
 - **Package Creation**: Create .intunewin files from installers, folders, or files using correct IntuneWinAppUtil.exe parameters
 - **Package Extraction**: Extract contents from existing .intunewin files
+- **About Section**: Comprehensive application information accessible via Info button in header
+- **Version Information**: Display of application, Tauri, Rust versions and platform details
+- **Resource Links**: Direct access to GitHub repository and documentation
 - **Click-to-Select Interface**: Simple file operations with visual feedback
 - **Real-time Progress**: Live status updates and operation monitoring
 - **File Dialogs**: Native Windows file and folder selection
 - **Keyboard Shortcuts**: Ctrl+O for quick file access
-- **Windows-Friendly Theme**: Optimized dark theme for IT administrators
+- **Theme Support**: Windows-friendly dark and light themes with automatic adaptation
+- **Optimized Window Size**: Default 900x800 window dimensions for better content visibility
 - **Professional UI**: Clean, enterprise-ready interface design
 - **Accessibility**: Full keyboard navigation and screen reader support
 - **Modern Tech Stack**: Built with Tauri, React, and TypeScript
@@ -33,7 +37,11 @@ A lightweight Windows desktop application that enables IT administrators to easi
 - Real-time progress tracking and logging
 - File dialog integration for Windows-native experience
 - Click-to-select framework with operation detection
-- Windows-friendly dark theme
+- Windows-friendly dark and light themes with automatic adaptation
+- About section with comprehensive application information
+- Version information display and resource links
+- Optimized window sizing (900x800) for better content visibility
+- Theme-aware Operation Logs button styling
 - Responsive design and accessibility features
 - Comprehensive error handling and user feedback
 - Project structure and build system
@@ -51,6 +59,7 @@ A lightweight Windows desktop application that enables IT administrators to easi
 - **UI Framework**: Tailwind CSS + shadcn/ui
 - **Build Tool**: Vite 7.0.4
 - **Icons**: Lucide React
+- **URL Opening**: Open Crate 5.0 for cross-platform URL handling
 - **Platform**: Windows Desktop
 
 ## 🚀 Getting Started

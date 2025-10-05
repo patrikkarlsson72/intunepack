@@ -26,7 +26,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Improved
 - **Window Size**: Increased default window dimensions from 800x600 to 900x800 for better content visibility
-- **Operation Logs Button**: Fixed background color and text visibility for proper dark theme integration
+- **Operation Logs Button**: Complete styling overhaul for proper theme integration
+  - Fixed white background issue that conflicted with dark theme
+  - Implemented theme-aware colors using CSS variables (var(--muted), var(--muted-foreground))
+  - Enhanced hover effects with proper contrast in both light and dark themes
+  - Replaced Button component with native button element to avoid CSS conflicts
+  - Added smooth color transitions for better user experience
 - **Package Creation Workflow**: Implemented proper 4-step workflow with visual progress tracking
 - **Command Line Integration**: Updated to use correct IntuneWinAppUtil.exe parameters (-c, -s, -o, -q)
 - **Success Detection**: Enhanced file creation verification with multiple detection methods

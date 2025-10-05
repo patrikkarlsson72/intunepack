@@ -24,11 +24,15 @@ IntunePack is a lightweight Windows desktop application that enables IT administ
 - **File Management**: Output files saved to user-selected directory with proper verification
 
 ### User Experience Features
-- **Theme Support**: Windows-friendly dark theme optimized for IT administrators
+- **Theme Support**: Windows-friendly dark and light themes with automatic adaptation
+- **About Section**: Comprehensive application information accessible via Info button in header
+- **Version Information**: Display of application, Tauri, Rust versions and platform details
+- **Resource Links**: Direct access to GitHub repository and documentation
 - **Responsive Design**: Clean, professional interface suitable for enterprise environments
 - **Error Handling**: Clear error messages and troubleshooting information
 - **Status Indicators**: Visual feedback for operation states (ready, processing, completed, failed)
 - **Keyboard Shortcuts**: Ctrl+O for quick file access
+- **Window Sizing**: Optimized default window dimensions (900x800) for better content visibility
 
 ## User Stories
 
@@ -57,11 +61,12 @@ IntunePack is a lightweight Windows desktop application that enables IT administ
 - **Accessibility**: High contrast and clear typography for long work sessions
 
 ### Layout Structure
-- **Header**: App branding with custom logo, theme toggle and status indicator
+- **Header**: App branding with custom logo, About button, theme toggle and status indicator
 - **Main Area**: Large click-to-select zone with clear visual feedback
 - **Workflow Tracker**: Visual progress indicators showing completed steps in the package creation process
 - **Action Cards**: Two primary function cards (Create Package, Extract Package)
-- **Logs Panel**: Collapsible panel showing real-time operation logs
+- **Logs Panel**: Collapsible panel with theme-aware styling showing real-time operation logs
+- **About Modal**: Comprehensive application information with version details and resource links
 
 ### Branding and Visual Identity
 - **Custom Logo**: Professional 3D wireframe box with upward arrow icon representing packaging and deployment

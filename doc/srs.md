@@ -70,6 +70,7 @@ IntunePack is a Windows desktop application built with modern web technologies a
 - **Rust**: System programming language for performance and safety
 - **Serde**: Serialization framework for JSON communication
 - **Tauri Plugin Opener**: File system integration
+- **Open Crate 5.0**: Cross-platform URL opening functionality
 - **IntuneWinAppUtil.exe**: Microsoft's official tool for .intunewin package creation
 - **IntuneWinAppUtilDecoder.exe**: Third-party tool for .intunewin package extraction
 
@@ -82,11 +83,12 @@ IntunePack is a Windows desktop application built with modern web technologies a
 ## User Interface Design
 
 ### Layout Components
-- **Header**: Application branding with custom logo, theme toggle, and status indicator
+- **Header**: Application branding with custom logo, About button, theme toggle, and status indicator
 - **Click-to-Select Zone**: Central workspace for file operations
 - **Workflow Tracker**: Visual progress indicators showing completed steps in package creation
 - **Action Cards**: Primary function buttons (Create Package, Extract Package)
-- **Logs Panel**: Collapsible panel for operation monitoring and debugging
+- **Logs Panel**: Collapsible panel with theme-aware styling for operation monitoring and debugging
+- **About Modal**: Comprehensive application information with version details and resource links
 
 ### Branding and Logo System
 - **Custom Logo**: Professional 3D wireframe box with upward arrow icon
@@ -112,6 +114,12 @@ create_intunewin(setup_folder: String, setup_file: String, output_folder: String
 
 // Package Extraction  
 extract_intunewin(file_path: String, output_dir: String) -> Result<OperationResult, String>
+
+// Version Information
+get_version_info() -> VersionInfo
+
+// URL Opening
+open_url(url: String) -> Result<(), String>
 ```
 
 ### IntuneWinAppUtil Integration
@@ -162,6 +170,7 @@ IntuneWinAppUtil.exe -c <setup_folder> -s <setup_file> -o <output_folder> -q
 - **Memory**: 4GB RAM minimum, 8GB recommended
 - **Storage**: 100MB for application, additional space for package operations
 - **CPU**: Modern multi-core processor recommended
+- **Display**: Minimum 900x800 resolution for optimal interface display
 
 ### Performance Targets
 - **Startup Time**: < 3 seconds application launch

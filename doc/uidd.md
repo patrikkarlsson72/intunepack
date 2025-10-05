@@ -24,6 +24,7 @@ IntunePack's user interface is designed specifically for Windows IT administrato
 - **Custom Logo**: Professional 3D wireframe box with upward arrow icon representing packaging and deployment
 - **Theme-Adaptive Logo**: Automatic switching between light theme (dark gray text) and dark theme (white text) versions
 - **Logo Sizing**: 64px height (4rem) for optimal header visibility and professional appearance
+- **About Button**: Info icon button for accessing application information and version details
 - **Theme Toggle**: Sun/Moon icon for light/dark mode switching
 - **Status Indicator**: Real-time status badge (Ready, Processing, Completed, Failed)
 - **Layout**: Horizontal layout with left-aligned logo branding and right-aligned controls
@@ -43,9 +44,20 @@ IntunePack's user interface is designed specifically for Windows IT administrato
 
 ### Logs Panel
 - **Collapsible Design**: Slide-up panel that can be expanded/collapsed
+- **Theme-Aware Styling**: Proper background and text colors that adapt to light/dark themes
 - **Real-time Updates**: Live log streaming during operations
 - **Syntax Highlighting**: Color-coded messages (success, warning, error)
 - **Scrollable Content**: Handles long log outputs efficiently
+- **Button Styling**: Native button element with CSS variables for theme consistency
+
+### About Modal
+- **Comprehensive Information**: Application details, version information, and feature overview
+- **Version Display**: Shows application, Tauri, Rust versions and platform information
+- **Technology Stack**: Visual grid showing Tauri, React, Rust, TypeScript technologies
+- **Feature List**: Bullet-pointed list of key application capabilities
+- **Resource Links**: Clickable buttons for GitHub repository and documentation access
+- **Theme Integration**: Consistent styling with main application theme
+- **Modal Design**: Overlay modal with proper backdrop and close functionality
 
 ## Core Components
 
@@ -128,10 +140,11 @@ IntunePack's user interface is designed specifically for Windows IT administrato
 ## Responsive Design
 
 ### Desktop Optimization
-- **Window Sizing**: Optimized for 800x600 minimum, scales gracefully
+- **Window Sizing**: Optimized for 900x800 default, scales gracefully from 800x600 minimum
 - **Layout**: Two-column action cards on wider screens
 - **Typography**: Scales appropriately with window size
 - **Touch Support**: Mouse and touch interactions supported
+- **Content Visibility**: Larger default window reduces need for scrolling
 
 ### Breakpoints
 - **Small Desktop**: 800px - Single column layout
