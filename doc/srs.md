@@ -40,20 +40,22 @@ IntunePack is a Windows desktop application built with modern web technologies a
 ### Package Creation Flow
 1. User clicks "Browse Folders" → Select folder containing setup files
 2. User selects main setup executable (setup.exe, setup.msi, etc.)
-3. User chooses output directory for the generated .intunewin file
-4. User clicks "Create Package" → React calls Tauri command `create_intunewin(setup_folder, setup_file, output_folder)`
+3. User clicks "Create Package" → React automatically uses setup folder as output directory
+4. React calls Tauri command `create_intunewin(setup_folder, setup_file, output_folder)` with output_folder = setup_folder
 5. Backend executes IntuneWinAppUtil.exe with correct parameters (-c, -s, -o, -q)
 6. Backend streams progress updates and logs to frontend
 7. Frontend updates workflow tracker with green dot indicators
 8. Backend verifies .intunewin file creation with multiple detection methods
 9. Operation completes → Success/error state displayed to user
+10. Generated .intunewin file is saved in the same folder as the setup files
 
 ### Package Extraction Flow
 1. User clicks to select `.intunewin` file → React validates file type
-2. React calls Tauri command `extract_intunewin(file_path, output_dir)`
-3. Backend extracts package contents → streams progress and logs
-4. Frontend displays extraction progress and results
-5. Operation completes → Extracted files available in output directory
+2. React automatically determines output directory from the .intunewin file location
+3. React calls Tauri command `extract_intunewin(file_path, output_dir)` with output_dir = directory containing the .intunewin file
+4. Backend extracts package contents → streams progress and logs
+5. Frontend displays extraction progress and results
+6. Operation completes → Extracted files available in the same directory as the .intunewin file
 
 ## Technical Stack
 

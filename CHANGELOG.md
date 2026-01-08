@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Improved
+- **Simplified Package Creation Workflow**: Removed output folder selection step; .intunewin files now automatically saved to setup folder
+- **Simplified Extraction Workflow**: Removed output directory selection; files automatically extracted to .intunewin file location
+- **User Experience**: Reduced workflow from 4 steps to 3 for package creation, and from 2 steps to 1 for extraction
+- **Logical Defaults**: Output locations now use sensible defaults, keeping all files organized together
+- **Fewer Dialogs**: Streamlined interface with automatic output location selection
+
+## [1.1.0] - 2026-01-08
+
 ### Added
 - **About Section**: New About modal accessible via Info button in header
 - **Version Information**: Display of application version, Tauri version, Rust version, and platform

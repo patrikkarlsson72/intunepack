@@ -5,7 +5,7 @@ A lightweight Windows desktop application that enables IT administrators to easi
 ## 🚀 Features
 
 - **IntuneWinAppUtilDecoder Integration**: Complete integration with Microsoft Intune Win32 Content Prep Tool
-- **4-Step Package Creation Workflow**: Browse Folders → Select Setup File → Choose Output → Create Package
+- **Simplified 3-Step Package Creation**: Browse Folders → Select Setup File → Create Package (output saved to setup folder automatically)
 - **Visual Progress Tracking**: Real-time workflow status with green dot indicators for each completed step
 - **Package Creation**: Create .intunewin files from installers, folders, or files using correct IntuneWinAppUtil.exe parameters
 - **Package Extraction**: Extract contents from existing .intunewin files
@@ -31,7 +31,7 @@ A lightweight Windows desktop application that enables IT administrators to easi
 ### ✅ Completed
 - Complete user interface and theme system
 - IntuneWinAppUtilDecoder integration for package creation and extraction
-- 4-step package creation workflow with visual progress tracking
+- Simplified 3-step package creation workflow with automatic output location
 - Correct IntuneWinAppUtil.exe command-line parameter implementation
 - Enhanced file detection and success verification
 - Real-time progress tracking and logging
@@ -118,16 +118,27 @@ The application will automatically detect the executables and show helpful error
 - **[User Interface Design Document](doc/uidd.md)**: UI/UX specifications and design system
 - **[Changelog](CHANGELOG.md)**: Complete project history and changes
 
-## 📋 Package Creation Workflow
+## 📋 Workflows
 
-IntunePack provides a streamlined 4-step process for creating .intunewin packages:
+### Package Creation Workflow
+
+IntunePack provides a streamlined 3-step process for creating .intunewin packages:
 
 1. **Browse Folders**: Select the folder containing your application setup files
 2. **Select Setup File**: Choose the main setup executable (e.g., setup.exe, setup.msi)
-3. **Choose Output**: Select the destination folder for the generated .intunewin file
-4. **Create Package**: Click "Create Package" to generate the .intunewin file
+3. **Create Package**: Click "Create Package" to generate the .intunewin file
 
-The application provides visual feedback with green dot indicators showing your progress through each step, ensuring a clear and intuitive user experience.
+**Output Location**: The generated .intunewin file is automatically saved in the same folder as your setup files, keeping everything organized together.
+
+### Package Extraction Workflow
+
+Extract .intunewin packages in a simple 1-step process:
+
+1. **Select File**: Choose the .intunewin file to extract
+
+**Output Location**: Files are automatically extracted to the same folder as the .intunewin file for easy access.
+
+The application provides visual feedback with green dot indicators and automatic output locations, ensuring a clear and intuitive user experience.
 
 ## 🎯 Target Users
 

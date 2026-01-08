@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Upload, Package, ChevronUp, ChevronDown, Sun, Moon, Loader2, Info } from "lucide-react";
+import { Upload, Package, ChevronUp, ChevronDown, Sun, Moon, Loader2, Info, FolderOpen, FileArchive } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -116,23 +116,9 @@ function App() {
         setupFile = filename;
       }
       
-      // Step 3: Select output folder
-      let outputDir = outputFolder;
-      
-      if (!outputDir) {
-        outputDir = await openDialog({
-          title: 'Select output directory for .intunewin file',
-          directory: true,
-          multiple: false,
-        });
-        
-        if (!outputDir) {
-          setStatus('idle');
-          return;
-        }
-        
-        setOutputFolder(outputDir);
-      }
+      // Step 3: Use setup folder as output directory (simplified workflow)
+      const outputDir = setupFolder;
+      setOutputFolder(outputDir);
       
       // Step 4: Get output filename
       let filename = outputFilename;
@@ -189,17 +175,9 @@ function App() {
       } else {
       }
       
-      // Open folder dialog to select output directory
-      const outputDir = await openDialog({
-        title: 'Select output directory',
-        directory: true,
-        multiple: false,
-      });
-      
-      if (!outputDir) {
-        setStatus('idle');
-        return;
-      }
+      // Extract to the same directory as the .intunewin file (simplified workflow)
+      const lastSlash = Math.max(selectedFile.lastIndexOf('\\'), selectedFile.lastIndexOf('/'));
+      const outputDir = lastSlash > -1 ? selectedFile.substring(0, lastSlash) : selectedFile;
       
       // Store the selected output directory for display in workflow box
       setOutputFolder(outputDir);
@@ -325,32 +303,123 @@ function App() {
 
       {/* Main Content */}
       <main className="flex-1 p-6 space-y-8">
-        {/* Drag and Drop Zone */}
-        <div
-          className={`
-            border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-200
-            border-border hover:border-primary/60 hover:bg-muted/30
-          `}
-          style={{ minHeight: '200px' }}
-        >
-          <Upload className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
-          <h2 className="text-xl font-semibold mb-2">Select files to process</h2>
-          <p className="text-muted-foreground mb-4">
-            Use the buttons below to select files or folders for processing
-          </p>
-          <p className="text-xs text-muted-foreground/70 mb-4">
-            💡 Tip: Use Ctrl+O to quickly open the file browser
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Button variant="outline" onClick={handleBrowseFiles}>Browse Files</Button>
-            <Button variant="outline" onClick={handleBrowseFolders}>Browse Folders</Button>
-          </div>
-          
-          {/* Show selected files and workflow status */}
-          {(droppedFiles.length > 0 || selectedFilePath || selectedSetupFile || outputFolder) && (
-            <div className="mt-4 p-4 bg-muted/30 rounded-lg">
-              <h3 className="font-medium mb-2">
-                {currentOperation === 'extract' ? 'Package Extraction Workflow:' : 'Package Creation Workflow:'}
+        {/* Operation Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+          {/* Create Package Card */}
+          <Card 
+            className={`
+              transition-all duration-200 cursor-pointer flex flex-col
+              border-2 hover:shadow-xl
+              ${currentOperation === 'create' 
+                ? 'border-primary ring-2 ring-primary/20 shadow-lg' 
+                : 'border-primary/20 hover:border-primary/40'
+              }
+            `}
+          >
+            <CardHeader className="space-y-2">
+              <div className="flex flex-col items-center text-center space-y-4">
+                <div className="p-4 bg-primary/10 rounded-full">
+                  <FolderOpen className="h-12 w-12 text-primary" />
+                </div>
+                <div className="space-y-2">
+                  <CardTitle className="text-2xl">Create Package</CardTitle>
+                  <p className="text-sm text-muted-foreground min-h-[48px]">
+                    Package your application into a .intunewin file for Intune deployment
+                  </p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3 mt-auto">
+              <Button 
+                onClick={handleBrowseFolders}
+                className="w-full bg-primary hover:bg-primary/90"
+                size="lg"
+                disabled={status === 'processing' && currentOperation === 'create'}
+              >
+                {status === 'processing' && currentOperation === 'create' ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <FolderOpen className="mr-2 h-5 w-5" />
+                    Browse Folder
+                  </>
+                )}
+              </Button>
+              <p className="text-xs text-center text-muted-foreground">
+                Select folder containing setup files
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Extract Package Card */}
+          <Card 
+            className={`
+              transition-all duration-200 cursor-pointer flex flex-col
+              border-2 hover:shadow-xl
+              ${currentOperation === 'extract' 
+                ? 'border-green-500 ring-2 ring-green-500/20 shadow-lg' 
+                : 'border-green-500/20 hover:border-green-500/40'
+              }
+            `}
+          >
+            <CardHeader className="space-y-2">
+              <div className="flex flex-col items-center text-center space-y-4">
+                <div className="p-4 bg-green-500/10 rounded-full">
+                  <FileArchive className="h-12 w-12 text-green-500" />
+                </div>
+                <div className="space-y-2">
+                  <CardTitle className="text-2xl">Extract Package</CardTitle>
+                  <p className="text-sm text-muted-foreground min-h-[48px]">
+                    Extract and view the contents of an existing .intunewin file
+                  </p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3 mt-auto">
+              <Button 
+                onClick={handleBrowseFiles}
+                className="w-full bg-green-500 hover:bg-green-600 text-white"
+                size="lg"
+                disabled={status === 'processing' && currentOperation === 'extract'}
+              >
+                {status === 'processing' && currentOperation === 'extract' ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Extracting...
+                  </>
+                ) : (
+                  <>
+                    <FileArchive className="mr-2 h-5 w-5" />
+                    Browse File
+                  </>
+                )}
+              </Button>
+              <p className="text-xs text-center text-muted-foreground">
+                Select .intunewin file to extract
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Workflow Status - Shows after selection */}
+        {(droppedFiles.length > 0 || selectedFilePath || selectedSetupFile || outputFolder) && (
+          <Card className="border-2">
+            <CardContent className="pt-6">
+              <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                {currentOperation === 'extract' ? (
+                  <>
+                    <FileArchive className="h-5 w-5 text-green-500" />
+                    Package Extraction Workflow
+                  </>
+                ) : (
+                  <>
+                    <Package className="h-5 w-5 text-primary" />
+                    Package Creation Workflow
+                  </>
+                )}
               </h3>
               <div className="space-y-2 text-sm text-muted-foreground">
                 {currentOperation === 'extract' ? (
@@ -360,23 +429,23 @@ function App() {
                       <span>Source File: {selectedFilePath ? selectedFilePath.split('/').pop() || selectedFilePath.split('\\').pop() : 'Not selected'}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`w-2 h-2 rounded-full ${outputFolder ? 'bg-green-500' : 'bg-gray-400'}`}></span>
-                      <span>Extract To: {outputFolder ? outputFolder.split('/').pop() || outputFolder.split('\\').pop() : 'Not selected'}</span>
+                      <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                      <span className="text-blue-500">Extract To: Same folder (automatic)</span>
                     </div>
                   </>
                 ) : (
                   <>
                     <div className="flex items-center gap-2">
                       <span className={`w-2 h-2 rounded-full ${selectedFilePath ? 'bg-green-500' : 'bg-gray-400'}`}></span>
-                      <span>Setup File: {selectedFilePath ? selectedFilePath.split('/').pop() || selectedFilePath.split('\\').pop() : 'Not selected'}</span>
+                      <span>Setup Folder: {selectedFilePath ? selectedFilePath.split('/').pop() || selectedFilePath.split('\\').pop() : 'Not selected'}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`w-2 h-2 rounded-full ${outputFolder ? 'bg-green-500' : 'bg-gray-400'}`}></span>
-                      <span>Output Folder: {outputFolder ? outputFolder.split('/').pop() || outputFolder.split('\\').pop() : 'Not selected'}</span>
+                      <span className={`w-2 h-2 rounded-full ${selectedSetupFile ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+                      <span>Setup File: {selectedSetupFile || 'Not selected'}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`w-2 h-2 rounded-full ${outputFilename ? 'bg-green-500' : 'bg-gray-400'}`}></span>
-                      <span>Output File: {outputFilename || 'Auto-generated'}</span>
+                      <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                      <span className="text-blue-500">Output: Same folder (automatic)</span>
                     </div>
                   </>
                 )}
@@ -427,11 +496,11 @@ function App() {
                   Clear
                 </Button>
               </div>
-            </div>
-          )}
-        </div>
+            </CardContent>
+          </Card>
+        )}
 
-        {/* Action Cards */}
+        {/* Legacy Action Cards - Now less prominent */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Create Package Card */}
           <Card 
