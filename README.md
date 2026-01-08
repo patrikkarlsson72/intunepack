@@ -24,8 +24,8 @@ A lightweight Windows desktop application that enables IT administrators to easi
 
 ## 📋 Current Status
 
-**Version**: 0.1.0+ (With IntuneWinAppUtilDecoder Integration)  
-**Status**: Core Functionality Complete, Ready for Testing  
+**Version**: 1.2.0  
+**Status**: Production Ready  
 **Platform**: Windows 10/11 (64-bit)
 
 ### ✅ Completed
