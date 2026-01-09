@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-01-09
+
+### Improved
+- **Cleaned UI**: Removed redundant action cards at bottom of interface for cleaner design
+- **Enhanced Operation Logs**: Increased logs section height from 256px to 400px for better visibility
+- **Auto-Open Logs**: Logs automatically expand when operations start for immediate feedback
+- **Log Management**: Added entry count badge and clear button to logs header for better control
+- **Better Formatting**: Improved log spacing and readability with enhanced styling
+
+### Fixed
+- **Event Handler Bug**: Fixed logs header mouse event handlers to prevent reference errors
+
 ## [1.2.0] - 2026-01-08
 
 ### Improved  
