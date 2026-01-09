@@ -65,6 +65,13 @@ function App() {
     };
   }, []);
 
+  // Auto-open logs when operation starts
+  useEffect(() => {
+    if (status === 'processing') {
+      setIsLogsOpen(true);
+    }
+  }, [status]);
+
 
 
   const handleCreatePackage = async () => {
@@ -499,116 +506,69 @@ function App() {
             </CardContent>
           </Card>
         )}
-
-        {/* Legacy Action Cards - Now less prominent */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Create Package Card */}
-          <Card 
-            className={`hover:shadow-lg transition-shadow cursor-pointer border-primary/20 hover:border-primary/40 ${
-              currentOperation === 'create' ? 'ring-2 ring-primary/50' : ''
-            }`}
-            onClick={() => setCurrentOperation('create')}
-          >
-            <CardHeader className="pb-3">
-              <div className="flex items-center gap-3">
-                <Package className="h-6 w-6 text-primary" />
-                <CardTitle className="text-lg">Create Package</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                Package installers, folders, or files into a .intunewin file for Intune deployment.
-              </p>
-              {status === 'processing' && currentOperation === 'create' && (
-                <div className="progress-container space-y-3 p-3 bg-primary/5 border border-primary/20 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 progress-spinner text-primary" />
-                    <span className="text-sm font-medium text-primary progress-pulse">Creating package...</span>
-                  </div>
-                  <Progress value={progress} className="progress-bar h-2" />
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>Packaging files</span>
-                    <span className="font-medium">{progress}%</span>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Extract Package Card */}
-          <Card 
-            className={`hover:shadow-lg transition-shadow cursor-pointer border-green-500/20 hover:border-green-500/40 ${
-              currentOperation === 'extract' ? 'ring-2 ring-green-500/50' : ''
-            }`}
-            onClick={() => setCurrentOperation('extract')}
-          >
-            <CardHeader className="pb-3">
-              <div className="flex items-center gap-3">
-                <Upload className="h-6 w-6 text-green-500" />
-                <CardTitle className="text-lg">Extract Package</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                Extract contents from an existing .intunewin file to view its structure.
-              </p>
-              {status === 'processing' && currentOperation === 'extract' && (
-                <div className="progress-container space-y-3 p-3 bg-green-500/5 border border-green-500/20 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 progress-spinner text-green-500" />
-                    <span className="text-sm font-medium text-green-500 progress-pulse">Extracting package...</span>
-                  </div>
-                  <Progress value={progress} className="progress-bar h-2" />
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>Extracting files</span>
-                    <span className="font-medium">{progress}%</span>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
       </main>
 
-      {/* Logs Panel */}
+      {/* Enhanced Logs Panel */}
       <div className="border-t border-border">
-        <button
-          className="w-full flex justify-between items-center p-4 border-0 rounded-none transition-colors bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground"
+        <div
+          className="w-full flex justify-between items-center p-4 border-0 rounded-none transition-colors bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground cursor-pointer"
           style={{ 
             backgroundColor: 'var(--muted)',
             color: 'var(--muted-foreground)',
             border: 'none'
           }}
           onMouseEnter={(e) => {
-            const target = e.target as HTMLElement;
+            const target = e.currentTarget as HTMLElement;
             target.style.backgroundColor = 'var(--muted)';
             target.style.color = 'var(--foreground)';
           }}
           onMouseLeave={(e) => {
-            const target = e.target as HTMLElement;
+            const target = e.currentTarget as HTMLElement;
             target.style.backgroundColor = 'var(--muted)';
             target.style.color = 'var(--muted-foreground)';
           }}
           onClick={() => setIsLogsOpen(!isLogsOpen)}
         >
-          <span className="font-medium">Operation Logs</span>
-          {isLogsOpen ? (
-            <ChevronDown className="h-4 w-4" />
-          ) : (
-            <ChevronUp className="h-4 w-4" />
-          )}
-        </button>
+          <div className="flex items-center gap-2">
+            <span className="font-medium">Operation Logs</span>
+            {logs.length > 0 && (
+              <Badge variant="secondary" className="text-xs">
+                {logs.length} {logs.length === 1 ? 'entry' : 'entries'}
+              </Badge>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            {logs.length > 0 && (
+              <Button 
+                size="sm" 
+                variant="ghost" 
+                className="h-7 text-xs"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLogs([]);
+                }}
+              >
+                Clear
+              </Button>
+            )}
+            {isLogsOpen ? (
+              <ChevronDown className="h-4 w-4" />
+            ) : (
+              <ChevronUp className="h-4 w-4" />
+            )}
+          </div>
+        </div>
         
         {isLogsOpen && (
-          <div className="border-t border-border bg-black/90 text-green-400 font-mono text-sm p-4 max-h-64 overflow-y-auto">
+          <div className="border-t border-border bg-black/90 text-green-400 font-mono text-sm p-4 max-h-[400px] overflow-y-auto">
             {logs.length > 0 ? (
               logs.map((log, index) => (
-                <div key={index} className="mb-1">
+                <div key={index} className="mb-1.5 leading-relaxed">
                   {log}
                 </div>
               ))
             ) : (
-              <div className="text-muted-foreground">
+              <div className="text-muted-foreground text-center py-8">
                 No logs available. Operations will appear here.
               </div>
             )}
