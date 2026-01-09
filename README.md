@@ -64,11 +64,11 @@ A lightweight Windows desktop application that enables IT administrators to easi
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### Prerequisites (for Development)
 - Node.js 18+ and npm
 - Rust 1.70+
 - Windows 10/11 (64-bit)
-- **IntuneWin Executables**: Download `IntuneWinAppUtil.exe` and `IntuneWinAppUtilDecoder.exe` and place them in `src-tauri/bin/`
+- **IntuneWin Executables**: `IntuneWinAppUtil.exe` and `IntuneWinAppUtilDecoder.exe` (see setup instructions below)
 
 ### Installation
 ```bash
@@ -89,15 +89,21 @@ npm run tauri dev
 npm run tauri build
 ```
 
-## 📦 IntuneWin Executables Setup
+## 📦 Using IntunePack
 
-To use IntunePack, you need to download the Microsoft Intune Win32 Content Prep Tool executables:
+### For End Users (Installing from .msi)
 
-### Download Sources
-- **IntuneWinAppUtil.exe**: Available from Microsoft's official Intune Win32 Content Prep Tool
+**No additional setup required!** The required executables (`IntuneWinAppUtil.exe` and `IntuneWinAppUtilDecoder.exe`) are bundled with the installer. Simply install IntunePack and start using it immediately.
+
+### For Developers (Building from Source)
+
+If you're building IntunePack from source, you need to download the Microsoft Intune Win32 Content Prep Tool executables:
+
+#### Download Sources
+- **IntuneWinAppUtil.exe**: Available from [Microsoft's official Intune Win32 Content Prep Tool](https://github.com/microsoft/Microsoft-Win32-Content-Prep-Tool)
 - **IntuneWinAppUtilDecoder.exe**: Available from the [IntuneWinAppUtilDecoder GitHub repository](https://github.com/okieselbach/Intune/tree/master/IntuneWinAppUtilDecoder)
 
-### Installation
+#### Setup for Building
 1. Download both executables
 2. Place them in the `src-tauri/bin/` directory:
    ```
@@ -107,8 +113,9 @@ To use IntunePack, you need to download the Microsoft Intune Win32 Content Prep 
            ├── IntuneWinAppUtil.exe
            └── IntuneWinAppUtilDecoder.exe
    ```
+3. Build the application - the executables will be automatically bundled into the installer
 
-### Verification
+#### Verification
 The application will automatically detect the executables and show helpful error messages if they're missing.
 
 ## 📖 Documentation
