@@ -452,7 +452,7 @@ function App() {
               
               <div className="pt-4 border-t border-border">
                 <p className="text-xs text-center text-muted-foreground">
-                  Version 1.2.1 • Ready for Windows 10/11
+                  Version 1.2.2 • Ready for Windows 10/11
                 </p>
               </div>
             </CardContent>

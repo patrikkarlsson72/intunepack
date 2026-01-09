@@ -24,7 +24,7 @@ A lightweight Windows desktop application that enables IT administrators to easi
 
 ## 📋 Current Status
 
-**Version**: 1.2.1  
+**Version**: 1.2.2  
 **Status**: Production Ready  
 **Platform**: Windows 10/11 (64-bit)
 
