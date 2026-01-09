@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Upload, Package, ChevronUp, ChevronDown, Sun, Moon, Loader2, Info, FolderOpen, FileArchive } from "lucide-react";
+import { Package, ChevronUp, ChevronDown, Sun, Moon, Loader2, Info, FolderOpen, FileArchive } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -410,6 +410,54 @@ function App() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Welcome Panel - Shows when idle */}
+        {!selectedFilePath && !currentOperation && status === 'idle' && (
+          <Card className="border-2 border-dashed border-primary/20 bg-muted/20">
+            <CardContent className="pt-6 space-y-6">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold mb-2">
+                  👋 Welcome to IntunePack
+                </h2>
+                <p className="text-muted-foreground">
+                  Your desktop tool for creating and extracting .intunewin packages
+                </p>
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <h3 className="font-semibold flex items-center gap-2">
+                    <Package className="h-5 w-5 text-primary" />
+                    Quick Start
+                  </h3>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li>• Click "Browse Folder" to create packages</li>
+                    <li>• Click "Browse File" to extract packages</li>
+                    <li>• Output saved to same location automatically</li>
+                  </ul>
+                </div>
+                
+                <div className="space-y-3">
+                  <h3 className="font-semibold flex items-center gap-2">
+                    <Info className="h-5 w-5 text-blue-500" />
+                    Tips & Shortcuts
+                  </h3>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li>• Press <kbd className="px-2 py-1 text-xs font-semibold bg-muted border border-border rounded">Ctrl+O</kbd> to open file browser</li>
+                    <li>• Logs auto-open during operations</li>
+                    <li>• Theme toggle in top-right corner</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="pt-4 border-t border-border">
+                <p className="text-xs text-center text-muted-foreground">
+                  Version 1.2.1 • Ready for Windows 10/11
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Workflow Status - Shows after selection */}
         {(droppedFiles.length > 0 || selectedFilePath || selectedSetupFile || outputFolder) && (
