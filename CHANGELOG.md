@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Welcome Panel**: Added helpful welcome panel with quick start guide, tips, and shortcuts
+- **Quick Start Instructions**: Clear instructions for creating and extracting packages
+- **Keyboard Shortcuts Display**: Highlighted Ctrl+O shortcut with styled kbd tag
+
+### Improved
+- **Window Height**: Increased default window height from 800px to 900px to accommodate welcome panel without scrolling
+
 ## [1.2.1] - 2026-01-09
 
 ### Improved
